@@ -5,7 +5,7 @@ import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 const items = [
   {
     id: 1,
-    title: "Queue Management System",
+    title: "QMS",
     desc: "Introduced a web-based solution to streamline the queue management system at the Department for Registration of Persons in Sri Lanka.",
     role: "Full Stack Developer",
     tech:"React, Node, Express, MySQL",
@@ -29,8 +29,8 @@ const items = [
   },
   {
     id: 4,
-    title: "Learning Management System",
-    desc: "The aim of this project is to develop a well interactive and user-friendly platform with enormous advantages by reducing difficulties of distance education between the teacher and the student with the use of modern web technologies.",
+    title: "Learny",
+    desc: "The aim of this project is to develop a well interactive and user-friendly platform with enormous advantages by reducing difficulties of distance education between the teacher and the student.",
     role: "Full Stack Developer",
     tech:"React,Node,PostgreSQL,Express,AWS S3",
     img: "https://images.pexels.com/photos/18540208/pexels-photo-18540208/free-photo-of-wood-landscape-water-hill.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
