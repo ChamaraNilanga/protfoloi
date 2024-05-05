@@ -49,20 +49,14 @@ const Hero = () => {
           animate="animate"
         >
           <motion.h2 variants={textVariants}>CHAMARA KARUNARATHNA</motion.h2>
-          <motion.h1 variants={textVariants} style={{fontSize:"10vh"}}>
+          <motion.h1 variants={textVariants}>
             Software Engineer
           </motion.h1>
-          <motion.p variants={textVariants} style={{fontSize:"3vh"}}>
+          <motion.p variants={textVariants}>
               A quick learner who is self-motivated, hardworking, responsible, and friendly,
               with good problem-solving abilities and a willingness to take on new challenges
               in a fast-paced environment.
           </motion.p>
-          {/* <motion.div variants={textVariants} className="buttons">
-            <motion.button variants={textVariants}>
-              See the Latest Works
-            </motion.button>
-            <motion.button variants={textVariants}>Contact Me</motion.button>
-          </motion.div> */}
           <motion.img
             variants={textVariants}
             animate="scrollButton"
