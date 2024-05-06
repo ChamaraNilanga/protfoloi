@@ -4,6 +4,7 @@
   height: 100px;
   @include mobile {
     height: 50px;
+    display: none;
   }
 
   .wrapper {
