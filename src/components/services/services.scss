@@ -18,6 +18,10 @@
     align-items: center;
     gap: 20px;
 
+    :hover {
+      cursor: pointer;
+    }
+
     @include mobile {
       align-self: center;
       text-align: center;
