@@ -7,6 +7,7 @@ import Scc from "../../images/scc.png";
 import Uom from "../../images/uom.png";
 import Hasthiya from "../../images/hasthiya.jpeg";
 import Intervest from "../../images/intervest.jpeg";
+import { AnimatePresence } from "framer-motion";
 
 const variants = {
   initial: {
@@ -133,6 +134,7 @@ const Services = () => {
     damping: 30,
   });
   const y = useTransform(scrollYProgress, [0, 1], [-300, 300]);
+
   return (
     <motion.div
       className="services"
@@ -140,38 +142,60 @@ const Services = () => {
       initial="initial"
       ref={ref}
       animate={"animate"}
-      style={{marginTop: "20px"}}
+      style={{ marginTop: "20px" }}
     >
       <motion.div className="textContainer" variants={variants}>
-        <hr/>
-      <motion.div className="titleContainer" onClick={toggleSection} variants={variants}>
-        <div className="title">
-          <img src={showEducation ? Edu : "/people.webp"} alt="" />
-          <h1>
-            <motion.b whileHover={{ color: "orange" }}>{showEducation ? "Education" : "Work Experiance"}</motion.b>
-          </h1>
-        </div>
-      </motion.div>
+        <hr />
+        <motion.div
+          className="titleContainer"
+          onClick={toggleSection}
+          variants={variants}
+        >
+          <div className="title">
+            <img src={showEducation ? Edu : "/people.webp"} alt="" />
+            <h1>
+              <motion.b whileHover={{ color: "orange" }}>
+                {showEducation ? "Education" : "Work Experience"}
+              </motion.b>
+            </h1>
+          </div>
+        </motion.div>
         <hr />
       </motion.div>
+      <AnimatePresence>
         {showEducation ? (
-          <motion.div className="experiences mt-5">
-          <motion.div className="timeline">
-            {educations.map((experience, index) => (
-              <EducationCard key={index} experience={experience} />
-            ))}
+          <motion.div
+            key="education"
+            className="experiences mt-5"
+            variants={variants}
+            initial="initial"
+            animate="animate"
+            exit="initial"
+          >
+            <motion.div className="timeline">
+              {educations.map((experience, index) => (
+                <EducationCard key={index} experience={experience} />
+              ))}
+            </motion.div>
           </motion.div>
-        </motion.div>
         ) : (
-          <motion.div className="experiences mt-5">
-          <motion.div className="timeline">
-            {exp.map((experience, index) => (
-              <ExpCard key={index} experience={experience} />
-            ))}
+          <motion.div
+            key="experience"
+            className="experiences mt-5"
+            variants={variants}
+            initial="initial"
+            animate="animate"
+            exit="initial"
+          >
+            <motion.div className="timeline">
+              {exp.map((experience, index) => (
+                <ExpCard key={index} experience={experience} />
+              ))}
+            </motion.div>
           </motion.div>
-        </motion.div>
         )}
-      </motion.div>
+      </AnimatePresence>
+    </motion.div>
   );
 };
 
