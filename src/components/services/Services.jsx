@@ -8,6 +8,7 @@ import Uom from "../../images/uom.png";
 import Hasthiya from "../../images/hasthiya.jpeg";
 import Intervest from "../../images/intervest.jpeg";
 import { AnimatePresence } from "framer-motion";
+import People from "../../images/people.webp";
 
 const variants = {
   initial: {
@@ -152,7 +153,7 @@ const Services = () => {
           variants={variants}
         >
           <div className="title">
-            <img src={showEducation ? Edu : "/people.webp"} alt="" />
+            <img src={showEducation ? Edu : People} alt="" />
             <h1>
               <motion.b whileHover={{ color: "orange" }}>
                 {showEducation ? "Education" : "Work Experience"}
