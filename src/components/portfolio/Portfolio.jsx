@@ -1,6 +1,12 @@
 import { useRef } from "react";
 import "./portfolio.scss";
 import { motion, useScroll, useSpring, useTransform } from "framer-motion";
+import Cleaner from "../../images/cleaner.jpg";
+import Medpeeps from "../../images/medi.jpg";
+import Learny from "../../images/lms.jpg";
+import Jobmart from "../../images/job.jpg";
+import Niro from "../../images/niro.jpg";
+import Qms from "../../images/qms.jpg";
 
 const items = [
   {
@@ -9,7 +15,7 @@ const items = [
     desc: "Introduced a web-based solution to streamline the queue management system at the Department for Registration of Persons in Sri Lanka.",
     role: "Full Stack Developer",
     tech:"React, Node, Express, MySQL",
-    img: "https://images.pexels.com/photos/18073372/pexels-photo-18073372/free-photo-of-young-man-sitting-in-a-car-on-a-night-street.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load",
+    img: Qms,
   },
   {
     id: 2,
@@ -17,7 +23,7 @@ const items = [
     desc: "Developed a streamlined platform connecting cleaners, customers, and service admins for efficient cleaning service management.",
     role: "Full Stack Developer",
     tech:"React, Node, Express, MySQL",
-    img: "https://images.pexels.com/photos/18023772/pexels-photo-18023772/free-photo-of-close-up-of-a-person-holding-a-wristwatch.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load",
+    img: Cleaner,
   },
   {
     id: 3,
@@ -25,7 +31,7 @@ const items = [
     desc: "A worldwide medical student app lets administrators share top-notch study materials, promoting collaboration and offering comprehensive resources to enhance users academic experience.",
     role: "Mobile Developer",
     tech:"Flutter,Firebase",
-    img: "https://images.pexels.com/photos/6894528/pexels-photo-6894528.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load",
+    img: Medpeeps,
   },
   {
     id: 4,
@@ -33,13 +39,13 @@ const items = [
     desc: "The aim of this project is to develop a well interactive and user-friendly platform with enormous advantages by reducing difficulties of distance education between the teacher and the student.",
     role: "Full Stack Developer",
     tech:"React,Node,PostgreSQL,Express,AWS S3",
-    img: "https://images.pexels.com/photos/18540208/pexels-photo-18540208/free-photo-of-wood-landscape-water-hill.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+    img: Learny,
   },
   {
     id: 5,
     title: "JobMart",
     desc: "The JobMart.lk is a commercial web application that provides the opportunities to post available vacancies in an organization and, also to find available vacancies, for those interested to find a new job for their own qualifications.",
-    img: "https://images.pexels.com/photos/18540208/pexels-photo-18540208/free-photo-of-wood-landscape-water-hill.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+    img: Jobmart,
     role: "Full Stack Developer",
     tech:"React, SpringBoot, MySQL"
   },
@@ -47,7 +53,7 @@ const items = [
     id: 6,
     title: "NIROUSDT",
     desc: "NIROUSDT.com has been developed to provide a facility for customers to activate their plans, collect referrals, and interact easily with its customers in Forex Trading.",
-    img: "https://images.pexels.com/photos/18540208/pexels-photo-18540208/free-photo-of-wood-landscape-water-hill.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+    img: Niro,
     role: "Full Stack Developer",
     tech:"HTML,CSS,MySQL,PHP"
   },
