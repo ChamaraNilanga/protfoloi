@@ -166,6 +166,59 @@
         border-radius: 8px;
         margin-bottom: 20px;
         padding: 20px;
+
+        .left-content {
+          flex: 0 0 auto;
+          display: flex;
+          width: 40%;
+          // margin-right: 20px; /* Adjust spacing between image and text */
+          align-items: center;
+          justify-content: center;
+
+          .company-logo {
+            width: 45%;
+            height: 40%;
+
+            @include mobile {
+              width: 100%;
+              height: 20%;
+            }
+          }
+        }
+
+        .right-content {
+          flex: 1;
+          width: 60%;
+
+          h1 {
+            margin-top: 0;
+            margin-bottom: 10px;
+            color: orange;
+            font-size: 30px;
+
+            @include mobile {
+              font-size: 14px;
+            }
+          }
+
+          p {
+            margin: 0;
+
+            @include mobile {
+              font-size: 10px;
+            }
+          }
+
+          .edu-body{
+            padding-bottom: 10px;
+          }
+
+          h3{
+            @include mobile {
+              font-size: 12px;
+            }
+          }
+        }
   
         .experience-year {
           flex: 0 0 50px;

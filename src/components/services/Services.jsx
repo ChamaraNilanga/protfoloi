@@ -3,6 +3,8 @@ import "./services.scss";
 import "../portfolio/portfolio.scss";
 import { motion, useInView, useScroll, useSpring, useTransform } from "framer-motion";
 import Edu from "../../images/edu.jpeg";
+import Scc from "../../images/scc.png";
+import Uom from "../../images/uom.png";
 
 const variants = {
   initial: {
@@ -21,35 +23,27 @@ const variants = {
   },
 };
 
-const education = [
+const educations = [
   {
-    id: 1,
-    title: "Queue Management System",
-    desc: "Introduced a web-based solution to streamline the queue management system at the Department for Registration of Persons in Sri Lanka.",
-    role: "Full Stack Developer",
-    tech:"React, Node, Express, MySQL",
-    img: "https://images.pexels.com/photos/18073372/pexels-photo-18073372/free-photo-of-young-man-sitting-in-a-car-on-a-night-street.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load",
+    companyName: 'Faculty of Information Technology',
+    institute: 'University of Moratuwa',
+    header1: 'BSc(Hons) in Information Technology',
+    text1: 'GPA - 3.48',
+    header2: '',
+    text2: '',
+    time: '2020 - 2024',
+    img: Uom,
   },
   {
-    id: 2,
-    title: "Cleaner Connect",
-    desc: "Developed a streamlined platform connecting cleaners, customers, and service admins for efficient cleaning service management.",
-    role: "Full Stack Developer",
-    tech:"React, Node, Express, MySQL",
-    img: "https://images.pexels.com/photos/18023772/pexels-photo-18023772/free-photo-of-close-up-of-a-person-holding-a-wristwatch.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load",
-  }
-];
-
-const experiences = [
-  {
-    companyName: 'Department for Registration of Persons, Sri Lanka',
-    title: 'Queue Management System',
-    description: 'Introduced a web-based solution to streamline the queue management system.',
-    position: 'Full Stack Developer',
-    time: '2022 Dec - 2023 Jun',
-    tech: 'React, Node, Express, MongoDB'
+    companyName: 'Sivali Central College',
+    institute: 'Rathnapura',
+    header1: 'GCE Advanced Level - Physical Science Stream (2018)',
+    text1: 'Results: A and 2B`s',
+    header2: 'GCE Ordinary Level (2015)',
+    text2: 'Results:7A`s and 2B`s',
+    time: '2009 - 2018',
+    img: Scc,
   },
-  // Add more experiences as needed
 ];
 
 const exp = [
@@ -112,17 +106,24 @@ const SingleEdu = ({ item,scrollYProgress }) => {
   );
 };
 
-const ExperienceCard = ({ experience }) => {
+const EducationCard = ({ experience }) => {
   return (
     <motion.div className="experience-card">
-      <motion.div className="experience-year">{experience.time}</motion.div>
-      <img src={experience.companyLogo} alt={experience.companyName} className="company-logo" />
-      <motion.div className="experience-details">
-        <motion.h3>{experience.companyName}</motion.h3>
-        <motion.p><strong>Position:</strong> {experience.position}</motion.p>
-        <motion.p><strong>Company:</strong> {experience.companyName}</motion.p>
-        <motion.p>{experience.description}</motion.p>
-        <motion.p><strong>Technologies:</strong> {experience.tech}</motion.p>
+      <motion.div className="left-content">
+        <img src={experience.img} alt={experience.companyName} className="company-logo" />
+      </motion.div>
+      <motion.div className="right-content">
+        <motion.h1>{experience.companyName}</motion.h1>
+        <motion.h1>{experience.institute}</motion.h1>
+        <motion.div className="edu-body">
+        <motion.h3>{experience.header1}</motion.h3>
+        <motion.p>{experience.text1}</motion.p>
+        </motion.div>
+        <motion.div className="edu-body">
+        <motion.h3>{experience.header2}</motion.h3>
+        <motion.p>{experience.text2}</motion.p>
+        </motion.div>
+        <motion.p>{experience.time}</motion.p>
       </motion.div>
     </motion.div>
   );
@@ -172,8 +173,8 @@ const Services = () => {
         {showEducation ? (
           <motion.div className="experiences mt-5">
           <motion.div className="timeline">
-            {experiences.map((experience, index) => (
-              <ExperienceCard key={index} experience={experience} />
+            {educations.map((experience, index) => (
+              <EducationCard key={index} experience={experience} />
             ))}
           </motion.div>
         </motion.div>
