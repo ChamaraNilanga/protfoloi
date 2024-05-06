@@ -1,10 +1,15 @@
 @import "../../app.scss";
 .services {
+  // background: linear-gradient(180deg, #0c0c1d, #111132);
+  // height: 100%;
+  // display: flex;
+  // flex-direction: column;
+  // justify-content: space-between;
+
+  position: relative; /* Ensure relative positioning for children */
   background: linear-gradient(180deg, #0c0c1d, #111132);
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  height: 100vh; /* Set height to viewport height */
+  overflow-y: auto;
 
   .textContainer {
     flex: 1;
@@ -41,6 +46,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin-top: 10px;
 
     @include mobile {
       width: 100%;
@@ -50,6 +56,8 @@
       display: flex;
       align-items: center;
       gap: 50px;
+      position: relative;
+      top: 0;
 
       @include mobile {
         flex-direction: column;
@@ -143,4 +151,51 @@
       }
     }
   }
+  .experiences {
+    margin-top: 20px;
+  
+    .timeline {
+      display: flex;
+      flex-direction: column;
+      padding: 10px;
+  
+      .experience-card {
+        display: flex;
+        align-items: center;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        padding: 20px;
+  
+        .experience-year {
+          flex: 0 0 50px;
+          text-align: center;
+          font-weight: bold;
+          font-size: 18px;
+        }
+  
+        img{
+          width: 50px;
+          height: 50px;
+          margin-right: 20px;
+        }
+  
+        .experience-details {
+          flex: 1;
+        }
+  
+        h3 {
+          margin-top: 0;
+          margin-bottom: 10px;
+        }
+  
+        p {
+          margin: 0;
+        }
+      }
+  
+    }
+  
+  }
+    
 }
