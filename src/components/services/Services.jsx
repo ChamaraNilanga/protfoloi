@@ -157,6 +157,7 @@ const Services = () => {
               <motion.b whileHover={{ color: "orange" }}>
                 {showEducation ? "Education" : "Work Experience"}
               </motion.b>
+              <motion.p style={{width:"110px",height:"30px",fontSize:"12px",color:"orange"}}><strong>{showEducation ? "See Experience >>" : "See Education >>"}</strong></motion.p>
             </h1>
           </div>
         </motion.div>
