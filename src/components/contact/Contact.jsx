@@ -2,6 +2,9 @@ import { useRef, useState } from "react";
 import "./contact.scss";
 import { motion, useInView } from "framer-motion";
 import emailjs from "@emailjs/browser";
+import Github from "../../images/githubr.png";
+import Linkedin from "../../images/linkedinr.png";
+import Facebook from "../../images/fbr.png";
 
 const variants = {
   initial: {
@@ -31,14 +34,15 @@ const Contact = () => {
 
     emailjs
       .sendForm(
-        "service_94y20xo",
-        "template_v10u2oh",
+        "service_ez0lcjw",
+        "template_c2s9c2s",
         formRef.current,
-        "pX_2hasGmGcuvjXIW"
+        "tLrIodQ4YCsFFs0lx"
       )
       .then(
         (result) => {
-          setSuccess(true)
+          setSuccess(true);
+          formRef.current.reset();
         },
         (error) => {
           setError(true);
@@ -58,16 +62,23 @@ const Contact = () => {
         <motion.h1 variants={variants}>Let’s work together</motion.h1>
         <motion.div className="item" variants={variants}>
           <h2>Mail</h2>
-          <span>hello@react.dev</span>
-        </motion.div>
-        <motion.div className="item" variants={variants}>
-          <h2>Address</h2>
-          <span>Hello street New York</span>
+          <span>chamaranilanga1999@gmail.com</span>
         </motion.div>
         <motion.div className="item" variants={variants}>
           <h2>Phone</h2>
-          <span>+1 234 5678</span>
+          <span>+94 70 27 45 462</span>
         </motion.div>
+        <div className="social-new">
+          <a href="http://www.linkedin.com/in/chamarank">
+            <img src={Linkedin} alt="Linkedin" />
+          </a>
+          <a href="https://github.com/ChamaraNilanga">
+            <img src={Github} alt="Github" />
+          </a>
+          <a href="https://www.facebook.com/chamara.nilanga.9400?mibextid=LQQJ4d">
+            <img src={Facebook} style={{width:"30px"}} alt="Facebook" />
+          </a>
+        </div>
       </motion.div>
       <div className="formContainer">
         <motion.div

@@ -12,6 +12,7 @@
     width: 100%;
     padding: 10px;
     flex-direction: column;
+    gap: 20px;
   }
 
   .textContainer {
@@ -21,10 +22,20 @@
     gap: 40px;
 
     @include mobile {
-      gap: 20px;
+      gap: 10px;
       text-align: center;
       align-items: center;
       margin-top: 70px;
+    }
+    .social-new {
+      display: flex;
+      gap: 10px;
+      margin-left: -20px;
+
+      img {
+        width: 60px;
+        height: 30px;
+      }
     }
 
     h1 {
@@ -33,6 +44,8 @@
 
       @include mobile {
         font-size: 36px;
+        line-height: 50px;
+        margin-top: -50px;
       }
     }
 
