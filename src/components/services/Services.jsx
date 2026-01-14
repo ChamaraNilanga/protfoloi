@@ -53,20 +53,29 @@ const educations = [
 const exp = [
   {
     id: 1,
-    company: "Hasthiya IT",
-    desc: "I spearheaded web development using NodeJS, ExpressJS, ReactJS, and MySQL, while also contributing to mobile apps with Flutter and Firebase.",
+    company: "Onsys International Pvt Ltd",
+    desc: "Led the development of web applications using Spring Boot, React, and PostgreSQL within a microservices architecture, with seamless integration of Kubernetes, Minio, and Keycloak for scalable and secure solutions.",
     role: "Full Stack Developer",
-    position:"Associate Software Engineer",
-    time: "2023 Jun - Present",
+    position:"Software Engineer / Associate Software Engineer",
+    time: "2024 Apr - Present",
     img: Hasthiya,
   },
   {
     id: 2,
+    company: "Hasthiya IT",
+    desc: "I spearheaded web development using NodeJS, ExpressJS, ReactJS, and MySQL, while also contributing to mobile apps with Flutter and Firebase.",
+    role: "Full Stack Developer",
+    position:"Associate Software Engineer",
+    time: "2023 Jun - 2024 Apr",
+    img: Hasthiya,
+  },
+  {
+    id: 3,
     company: "Intervest Software Technologies",
     desc: "This internship solidified my understanding of full-stack development and industry best practices, enhancing my ability to deliver comprehensive software solutions with Springboot,Java, Javascript, SQL and Enonic CMS.",
     role: "Full Stack Developer",
     position:"Software Engineer - Intern",
-    time: "2023 Jun - Present",
+    time: "2022 Dec - 2023 Jun",
     img: Intervest,
   }
 ];
