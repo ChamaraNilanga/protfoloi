@@ -6,6 +6,7 @@ import Edu from "../../images/edu.jpeg";
 import Scc from "../../images/scc.png";
 import Uom from "../../images/uom.png";
 import Hasthiya from "../../images/hasthiya.jpeg";
+import Onsys from "../../images/onsys.jpeg";
 import Intervest from "../../images/intervest.jpeg";
 import { AnimatePresence } from "framer-motion";
 import People from "../../images/people.webp";
@@ -58,7 +59,7 @@ const exp = [
     role: "Full Stack Developer",
     position:"Software Engineer / Associate Software Engineer",
     time: "2024 Apr - Present",
-    img: Hasthiya,
+    img: Onsys,
   },
   {
     id: 2,
