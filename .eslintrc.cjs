@@ -14,6 +14,26 @@ module.exports = {
   rules: {
     "react/prop-types": "off",
     "no-unused-vars": "warn",
+    "react/no-unknown-property": [
+      "error",
+      {
+        ignore: [
+          "intensity",
+          "position",
+          "args",
+          "attach",
+          "rotation",
+          "rotation-x",
+          "rotation-y",
+          "rotation-z",
+          "transparent",
+          "emissive",
+          "emissiveIntensity",
+          "roughness",
+          "metalness",
+        ],
+      },
+    ],
     'react-refresh/only-export-components': [
       'warn',
       { allowConstantExport: true },

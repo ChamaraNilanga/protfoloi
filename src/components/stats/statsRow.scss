@@ -1,0 +1,47 @@
+@import "../../app.scss";
+
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-top: 18px;
+
+  @include mobile {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    margin-top: 12px;
+  }
+  @include short {
+    margin-top: 6px;
+  }
+
+  .stat-card {
+    padding: 14px 10px;
+    text-align: center;
+
+    @include short {
+      padding: 8px 6px;
+    }
+
+    .stat-value {
+      font-size: 26px;
+      font-weight: 800;
+      background: linear-gradient(120deg, var(--accent-orange), var(--accent-purple));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+
+      @include mobile {
+        font-size: 20px;
+      }
+    }
+
+    p {
+      margin-top: 4px;
+      font-size: 11px;
+      color: var(--text-muted);
+      font-weight: 500;
+      line-height: 1.3;
+    }
+  }
+}

@@ -1,34 +1,35 @@
-import Test from "./Test";
 import "./app.scss";
-import Contact from "./components/contact/Contact";
 import Cursor from "./components/cursor/Cursor";
-import Hero from "./components/hero/Hero";
 import Navbar from "./components/navbar/Navbar";
-import Parallax from "./components/parallax/Parallax";
-import Portfolio from "./components/portfolio/Portfolio";
-import Services from "./components/services/Services";
+import ScrollProgress from "./components/common/ScrollProgress";
+import Hero from "./components/hero/Hero";
+import About from "./components/about/About";
+import Skills from "./components/skills/Skills";
+import Projects from "./components/projects/Projects";
+import MoreProjects from "./components/projects/MoreProjects";
+import Experience from "./components/experience/Experience";
+import Contact from "./components/contact/Contact";
+import Footer from "./components/footer/Footer";
 
 const App = () => {
   return (
     <div>
+      <a className="skip-link" href="#main-content">
+        Skip to content
+      </a>
       <Cursor />
-      <section id="Homepage">
-        <Navbar />
+      <ScrollProgress />
+      <Navbar />
+      <main id="main-content">
         <Hero />
-      </section>
-      <section id="Experiance">
-        <Parallax type="portfolio" />
-      </section>
-      <section>
-        <Services />
-      </section>
-      <section id="Projects">
-        <Parallax type="services" />
-      </section>
-      <Portfolio />
-      <section id="Contact">
+        <About />
+        <Skills />
+        <Projects />
+        <MoreProjects />
+        <Experience />
         <Contact />
-      </section>
+      </main>
+      <Footer />
     </div>
   );
 };

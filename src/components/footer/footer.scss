@@ -1,0 +1,38 @@
+@import "../../app.scss";
+
+.site-footer {
+  background: var(--bg-base);
+  border-top: 1px solid var(--glass-border);
+  padding: 30px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 14px;
+
+  @include mobile {
+    justify-content: center;
+    text-align: center;
+    padding: 24px 20px;
+  }
+
+  p {
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+
+  .footer-social {
+    display: flex;
+    gap: 16px;
+
+    a {
+      font-size: 18px;
+      color: var(--text-muted);
+      transition: color 0.2s ease;
+
+      &:hover {
+        color: var(--accent-orange);
+      }
+    }
+  }
+}

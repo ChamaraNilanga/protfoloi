@@ -1,0 +1,16 @@
+{
+  "name": "Chamara Karunarathna | Full-Stack Software Engineer",
+  "short_name": "Chamara K.",
+  "description": "Portfolio of Chamara Karunarathna, a Full-Stack Software Engineer specializing in Java Spring Boot, React/Next.js, Flutter, and secure cloud-native systems.",
+  "start_url": "/protfoloi/",
+  "display": "standalone",
+  "background_color": "#0c0c1d",
+  "theme_color": "#0c0c1d",
+  "icons": [
+    {
+      "src": "/protfoloi/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

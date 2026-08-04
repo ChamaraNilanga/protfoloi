@@ -1,14 +1,20 @@
 @import "../../app.scss";
 
-.cursor{
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  border: 1px solid white;
+.cursor-glow {
   position: fixed;
-  z-index: 999;
+  top: 0;
+  left: 0;
+  width: 26px;
+  height: 26px;
+  margin-left: -13px;
+  margin-top: -13px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  background: radial-gradient(circle, rgba(138, 79, 255, 0.55), rgba(255, 157, 47, 0.15) 60%, transparent 70%);
+  mix-blend-mode: screen;
 
-  @include mobile{
+  @include mobile {
     display: none;
   }
 }

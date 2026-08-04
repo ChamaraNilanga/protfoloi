@@ -1,41 +1,184 @@
 @import "../../app.scss";
 
 .navbar {
-  height: 100px;
-  @include mobile {
-    height: 50px;
-    display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  border-bottom: 1px solid transparent;
+
+  &.scrolled {
+    background: rgba(12, 12, 29, 0.75);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--glass-border);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.25);
   }
 
-  .wrapper {
-    max-width: 1366px;
-    margin: auto;
+  .navbar-inner {
+    max-width: 1320px;
+    margin: 0 auto;
+    height: var(--nav-height);
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: 100%;
+    padding: 0 40px;
 
     @include mobile {
-      justify-content: flex-end;
-      padding: 20px;
+      height: var(--nav-height-mobile);
+      padding: 0 20px;
+    }
+  }
+
+  .brand {
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    color: var(--text-primary);
+
+    .dot {
+      color: var(--accent-orange);
+    }
+  }
+
+  .links-desktop {
+    display: flex;
+    gap: 32px;
+
+    @include tablet {
+      display: none;
     }
 
-    span {
-      font-weight: bold;
+    a {
+      position: relative;
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      padding: 6px 2px;
+      transition: color 0.2s ease;
+
+      &::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: -2px;
+        height: 2px;
+        width: 0;
+        background: linear-gradient(90deg, var(--accent-orange), var(--accent-purple));
+        transition: width 0.25s ease;
+      }
+
+      &:hover {
+        color: var(--text-primary);
+      }
+
+      &.active {
+        color: var(--text-primary);
+
+        &::after {
+          width: 100%;
+        }
+      }
+    }
+  }
+
+  .actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+
+    .icon-link {
+      display: flex;
+      align-items: center;
+      font-size: 19px;
+      color: var(--text-secondary);
+      transition: color 0.2s ease, transform 0.2s ease;
+
+      &:hover {
+        color: var(--accent-purple);
+        transform: translateY(-2px);
+      }
+
+      @include tablet {
+        display: none;
+      }
+    }
+
+    .resume-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 16px;
+      border-radius: 10px;
+      border: 1px solid var(--glass-border);
+      background: var(--glass-bg);
+      color: var(--text-primary);
+      font-size: 14px;
+      font-weight: 600;
+      transition: border-color 0.2s ease, transform 0.2s ease;
+
+      &:hover {
+        border-color: var(--accent-orange);
+        transform: translateY(-2px);
+      }
 
       @include mobile {
         display: none;
       }
     }
 
-    .social {
-      display: flex;
-      gap: 20px;
+    .hamburger {
+      display: none;
+      background: transparent;
+      border: none;
+      color: var(--text-primary);
+      font-size: 26px;
+      cursor: pointer;
+      align-items: center;
 
-      img {
-        width: 60px;
-        height: 30px;
+      @include tablet {
+        display: flex;
       }
     }
+  }
+}
+
+.mobile-menu {
+  position: fixed;
+  top: var(--nav-height-mobile);
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(12, 12, 29, 0.97);
+  backdrop-filter: blur(20px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+  z-index: 999;
+
+  a {
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--text-secondary);
+
+    &.active {
+      color: var(--accent-orange);
+    }
+  }
+
+  .resume-btn {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 26px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--accent-orange), #ff6b6b);
+    color: #1a1206;
+    font-weight: 700;
   }
 }

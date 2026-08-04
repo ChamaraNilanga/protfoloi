@@ -1,0 +1,42 @@
+@import "../../app.scss";
+
+.section-accent {
+  position: absolute;
+  z-index: 0;
+  pointer-events: none;
+  width: clamp(180px, 20vw, 300px);
+  aspect-ratio: 1;
+  opacity: 0.8;
+
+  @include tablet {
+    width: clamp(140px, 26vw, 220px);
+  }
+  @include mobile {
+    display: none;
+  }
+
+  &.size-sm {
+    width: clamp(110px, 12vw, 150px);
+    opacity: 0.55;
+  }
+
+  &.accent-top-right {
+    top: 0;
+    right: 0;
+  }
+  &.accent-top-left {
+    top: 0;
+    left: 0;
+  }
+  &.accent-bottom-right {
+    bottom: 0;
+    right: 0;
+  }
+
+  .section-accent-canvas {
+    width: 100%;
+    height: 100%;
+    mask-image: radial-gradient(circle at 50% 50%, black 0%, black 45%, transparent 78%);
+    -webkit-mask-image: radial-gradient(circle at 50% 50%, black 0%, black 45%, transparent 78%);
+  }
+}

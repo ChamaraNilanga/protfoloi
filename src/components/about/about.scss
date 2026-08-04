@@ -1,0 +1,152 @@
+@import "../../app.scss";
+
+.about {
+  background: var(--bg-base-2);
+
+  .about-grid {
+    display: grid;
+    grid-template-columns: 240px minmax(0, 1fr);
+    gap: 32px;
+    align-items: center;
+
+    @include tablet {
+      grid-template-columns: 200px minmax(0, 1fr);
+      gap: 24px;
+    }
+    @include mobile {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 10px;
+    }
+    @include short {
+      gap: 8px;
+    }
+  }
+
+  .photo-frame {
+    position: relative;
+    padding: 10px;
+    transform-style: preserve-3d;
+    perspective: 1000px;
+
+    img {
+      width: 100%;
+      border-radius: 12px;
+      display: block;
+      object-fit: cover;
+      aspect-ratio: 4 / 5;
+    }
+
+    .badge {
+      position: absolute;
+      bottom: -12px;
+      right: 14px;
+      background: linear-gradient(135deg, var(--accent-orange), #ff6b6b);
+      color: #1a1206;
+      font-weight: 700;
+      font-size: 11px;
+      padding: 7px 12px;
+      border-radius: 10px;
+      box-shadow: 0 8px 18px -6px rgba(255, 157, 47, 0.6);
+      white-space: nowrap;
+    }
+
+    @include mobile {
+      width: 108px;
+      justify-self: center;
+    }
+    @include short {
+      width: 96px;
+    }
+  }
+
+  .about-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    min-width: 0;
+
+    @include mobile {
+      gap: 8px;
+    }
+    @include short {
+      gap: 6px;
+    }
+
+    p {
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--text-secondary);
+
+      strong {
+        color: var(--text-primary);
+      }
+
+      @include mobile {
+        font-size: 12.5px;
+        line-height: 1.45;
+        text-align: center;
+      }
+      @include short {
+        font-size: 11.5px;
+        line-height: 1.35;
+      }
+    }
+  }
+
+  .highlight-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+
+    @include mobile {
+      display: flex;
+      overflow-x: auto;
+      gap: 8px;
+      padding-bottom: 4px;
+      margin: 0 -20px;
+      padding-left: 20px;
+      padding-right: 20px;
+      scroll-snap-type: x proximity;
+
+      &::-webkit-scrollbar {
+        height: 0;
+      }
+    }
+  }
+
+  .highlight-card {
+    padding: 10px 14px;
+
+    @include mobile {
+      padding: 8px 12px;
+    }
+    transition: border-color 0.25s ease;
+
+    &:hover {
+      border-color: var(--accent-purple);
+    }
+
+    .highlight-icon {
+      font-size: 18px;
+      color: var(--accent-orange);
+      margin-bottom: 6px;
+    }
+
+    h3 {
+      font-size: 14px;
+      color: var(--text-primary);
+      margin-bottom: 3px;
+    }
+
+    p {
+      font-size: 12.5px;
+      color: var(--text-muted);
+      line-height: 1.45;
+    }
+
+    @include mobile {
+      flex: 0 0 180px;
+      scroll-snap-align: start;
+    }
+  }
+}

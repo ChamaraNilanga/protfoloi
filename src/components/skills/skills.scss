@@ -1,0 +1,135 @@
+@import "../../app.scss";
+
+.skills {
+  background: var(--bg-base-2);
+
+  .skills-categories {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+
+    @include mobile {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 14px;
+    }
+  }
+
+  .category-card {
+    position: relative;
+    padding: 20px 22px 22px;
+    overflow: hidden;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease;
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--cat-color), transparent 130%);
+    }
+
+    &::after {
+      content: "";
+      position: absolute;
+      top: -40px;
+      right: -40px;
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      background: var(--cat-color);
+      opacity: 0.12;
+      filter: blur(10px);
+      pointer-events: none;
+    }
+
+    &:hover {
+      border-color: var(--cat-color);
+      box-shadow: 0 16px 40px -16px var(--cat-color);
+    }
+  }
+
+  .category-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+    position: relative;
+    z-index: 1;
+
+    .category-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: color-mix(in srgb, var(--cat-color) 18%, transparent);
+      color: var(--cat-color);
+      font-size: 17px;
+      flex-shrink: 0;
+    }
+
+    h3 {
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: var(--text-primary);
+    }
+  }
+
+  .skill-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 9px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .skill-chip {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 14px 7px 8px;
+    border-radius: 30px;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--text-primary);
+    cursor: default;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--glass-border);
+    transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+
+    &:hover {
+      border-color: var(--cat-color);
+      background: color-mix(in srgb, var(--cat-color) 12%, transparent);
+      box-shadow: 0 10px 22px -10px var(--cat-color);
+    }
+
+    .chip-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: color-mix(in srgb, var(--cat-color) 22%, transparent);
+      color: var(--cat-color);
+      font-size: 12px;
+      flex-shrink: 0;
+    }
+
+    @include mobile {
+      padding: 6px 12px 6px 6px;
+      font-size: 11.5px;
+
+      .chip-icon {
+        width: 19px;
+        height: 19px;
+        font-size: 10.5px;
+      }
+    }
+  }
+}
