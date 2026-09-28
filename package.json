@@ -5,7 +5,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "predeploy":"npm run build",
+    "predeploy": "npm run build",
     "deploy": "gh-pages -d dist",
     "dev": "vite",
     "build": "vite build",
@@ -17,7 +17,8 @@
     "framer-motion": "^10.16.4",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "sass": "^1.68.0"
+    "sass": "^1.68.0",
+    "three": "^0.186.1"
   },
   "devDependencies": {
     "@types/react": "18.2.15",
