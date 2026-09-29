@@ -1,12 +1,12 @@
 import { useState } from "react";
 import "./styles.css";
-import Sky from "./components/Sky";
+import System from "./components/System";
+import { LAYERS } from "./system/createSystem";
 import Nav from "./components/Nav";
 import Hero from "./components/Hero";
 import Contact from "./components/Contact";
 import { stack, experiences, projects } from "./content";
 
-const CHAPTER_NAMES = ["Dusk", "Golden hour", "Blue hour", "Nebula", "Aurora", "Sunrise"];
 
 const Eyebrow = ({ n, children }) => (
   <div className="eyebrow reveal">
@@ -20,7 +20,12 @@ const App = () => {
 
   return (
     <>
-      <Sky onChapter={setChapter} />
+      <System onChapter={setChapter} />
+      <div className="layer-hud" aria-live="polite">
+        <span className="layer-n">{String(chapter + 1).padStart(2, "0")}</span>
+        <span className="layer-name">{LAYERS[chapter].name}</span>
+        <em>{LAYERS[chapter].detail}</em>
+      </div>
       <div className="page">
         <header className="top">
           <Nav />
@@ -47,6 +52,10 @@ const App = () => {
                 <b>Since 2022</b>
                 <span>Shipping production code</span>
               </div>
+              <div className="glass fact">
+                <b>3 teams</b>
+                <span>Intervest, Hasthiya, Onsys</span>
+              </div>
             </div>
           </section>
 
@@ -54,7 +63,7 @@ const App = () => {
             <div className="split-head">
               <Eyebrow n={2}>Stack</Eyebrow>
               <h2 className="title reveal">
-                The tools I <em>reach for</em>
+                The stack I <em>ship with</em>
               </h2>
               <p className="lede reveal">Backend in Java and Node, interfaces in React and Flutter, running on Kubernetes with Keycloak and MinIO.</p>
             </div>
@@ -129,7 +138,7 @@ const App = () => {
 
         <footer className="foot">
           <span>© {new Date().getFullYear()} Chamara Karunarathna</span>
-          <span aria-live="polite">Sky: {CHAPTER_NAMES[chapter]}</span>
+          <span>Built with React and three.js</span>
         </footer>
       </div>
     </>
