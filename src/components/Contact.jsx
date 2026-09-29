@@ -30,41 +30,42 @@ const Contact = () => {
   };
 
   return (
-    <div className="panel contact">
-      <div className="lines">
+    <div className="glass contact-card reveal">
+      <dl className="contact-lines">
         <div>
-          <span>mail</span>
-          <output>{contact.email}</output>
-          <button className="btn ghost" type="button" onClick={copyEmail}>
-            {copied ? "Copied" : "Copy"}
-          </button>
+          <dt>Email</dt>
+          <dd>
+            <output>{contact.email}</output>
+            <button type="button" className="chip-btn" onClick={copyEmail}>
+              {copied ? "Copied" : "Copy"}
+            </button>
+          </dd>
         </div>
         <div>
-          <span>phone</span>
-          <output>{contact.phone}</output>
+          <dt>Phone</dt>
+          <dd>
+            <output>{contact.phone}</output>
+          </dd>
         </div>
         <div>
-          <span>linkedin</span>
-          <a href={contact.linkedin} target="_blank" rel="noreferrer">
-            in/chamarank
-          </a>
+          <dt>Social</dt>
+          <dd>
+            <a href={contact.linkedin} target="_blank" rel="noreferrer">
+              LinkedIn
+            </a>
+            <a href={contact.github} target="_blank" rel="noreferrer">
+              GitHub
+            </a>
+          </dd>
         </div>
-        <div>
-          <span>github</span>
-          <a href={contact.github} target="_blank" rel="noreferrer">
-            ChamaraNilanga
-          </a>
-        </div>
-      </div>
-      <form className="msg" ref={formRef} onSubmit={sendEmail}>
+      </dl>
+      <form className="contact-form" ref={formRef} onSubmit={sendEmail}>
         <input id="name" name="name" type="text" required placeholder="Your name" aria-label="Your name" />
         <input id="email" name="email" type="email" required placeholder="Your email" aria-label="Your email" />
         <textarea id="message" name="message" rows={4} required placeholder="What are we building?" aria-label="Message" />
-        <div className="lines">
-          <div>
-            <button className="btn">Send message</button>
-            <small className="muted" role="status">{status}</small>
-          </div>
+        <div className="form-foot">
+          <button className="cta-solid">Send message</button>
+          <small role="status">{status}</small>
         </div>
       </form>
     </div>

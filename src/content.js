@@ -109,3 +109,10 @@ export const contact = {
   linkedin: "http://www.linkedin.com/in/chamarank",
   github: "https://github.com/ChamaraNilanga",
 };
+
+// drives the hero card: one bar per month, height = role level
+export const career = [
+  { short: "Intervest", from: new Date(2022, 11, 1), to: new Date(2023, 4, 1), level: 40 },
+  { short: "Hasthiya", from: new Date(2023, 5, 1), to: new Date(2024, 2, 1), level: 65 },
+  { short: "Onsys", from: new Date(2024, 3, 1), to: null, level: 100 },
+];
