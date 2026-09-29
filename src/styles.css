@@ -1478,3 +1478,210 @@ em {
 .finale {
   text-shadow: 0 2px 32px rgba(8, 10, 25, 0.65);
 }
+
+/* ---------- journey edition ---------- */
+.fade {
+  position: fixed;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  opacity: 0;
+  background: #05060b;
+}
+
+.portrait-tag {
+  position: absolute;
+  right: calc(var(--pad-x) + 4%);
+  bottom: 13%;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 12px 18px;
+  border-radius: 12px;
+  background: var(--glass-nav);
+  backdrop-filter: blur(17px);
+  -webkit-backdrop-filter: blur(17px);
+  font-size: 14px;
+}
+
+.portrait-tag em {
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 16px;
+}
+
+@media (max-width: 1023px) {
+  .portrait-tag {
+    display: none;
+  }
+}
+
+.chapter.right-side {
+  align-items: flex-end;
+}
+
+.chapter.low {
+  justify-content: flex-end;
+  align-items: center;
+  padding-bottom: 8vh;
+}
+
+.chapter.short {
+  min-height: 100vh;
+}
+
+.split {
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 1024px) {
+  .split {
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  }
+}
+
+.split-body {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.center-lede {
+  max-width: 460px;
+}
+
+.stop-caption {
+  min-height: 90vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pill-caption {
+  padding: 14px 22px;
+  border-radius: 999px;
+  font-size: 16px;
+}
+
+.pill-caption em {
+  font-size: 19px;
+}
+
+.edu-card,
+.role-card {
+  width: min(470px, 100%);
+  border-radius: 33px;
+  padding: 32px 32px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.edu-head {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+}
+
+.edu-head img {
+  width: 76px;
+  height: auto;
+  flex: none;
+  filter: drop-shadow(0 6px 18px rgba(0, 0, 0, 0.45));
+}
+
+.edu-title {
+  font-size: clamp(26px, 2.6vw, 34px);
+  font-weight: 400;
+  line-height: 1.02;
+  letter-spacing: -0.025em;
+}
+
+.muted-line {
+  margin-top: 8px;
+  font-size: 14px;
+  color: var(--white-80);
+}
+
+.edu-stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.edu-stats div {
+  padding: 16px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.edu-stats b {
+  font-size: 26px;
+  font-weight: 450;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+.edu-stats span {
+  font-size: 13px;
+  color: var(--white-80);
+  opacity: 0.8;
+}
+
+.edu-school {
+  padding-top: 14px;
+  border-top: 1px solid var(--white-10);
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--white-80);
+}
+
+.edu-school b {
+  color: #fff;
+  font-weight: 450;
+}
+
+.role-card .role-head {
+  margin-bottom: 4px;
+}
+
+.role-card h3 {
+  font-size: 34px;
+  font-weight: 450;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.role-step {
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.pair {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  width: min(820px, 100%);
+}
+
+.pair .work figure {
+  aspect-ratio: 16 / 7;
+}
+
+@media (max-width: 700px) {
+  .pair {
+    grid-template-columns: 1fr;
+  }
+  .edu-card,
+  .role-card {
+    padding: 24px 20px 22px;
+    border-radius: 24px;
+  }
+  .chapter.right-side {
+    align-items: center;
+  }
+}

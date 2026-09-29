@@ -5,7 +5,7 @@ import { contact } from "../content";
 
 const LINKS = [
   { label: "About", href: "#about" },
-  { label: "Stack", href: "#stack" },
+  { label: "Education", href: "#education" },
   { label: "Experience", href: "#experience" },
   { label: "Work", href: "#work", more: true },
 ];
