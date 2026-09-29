@@ -1,173 +1,160 @@
 import * as THREE from "three";
-import { V, C, hdr, canvasTexture, textPlane, glowDisc, loadImage, SERIF } from "./helpers";
+import { V, C, hdr, textPlane, glowDisc, loadImage, SERIF } from "./helpers";
+import { facultyBlock, palm, tree, bench, streetLamp, grassTex, paverTex, concreteTex, rand } from "./architecture";
 
 export const CAMPUS = V(1000, 0, 0);
-
-function palm(height, lean, mat, leafMat) {
-  const g = new THREE.Group();
-  const pts = [];
-  for (let i = 0; i <= 8; i++) {
-    const t = i / 8;
-    pts.push(V(Math.sin(t * 1.2) * lean, t * height, 0));
-  }
-  const curve = new THREE.CatmullRomCurve3(pts);
-  g.add(new THREE.Mesh(new THREE.TubeGeometry(curve, 24, 0.16, 8), mat));
-  const top = pts[pts.length - 1];
-  // fronds: long drooping leaves
-  const leaf = new THREE.PlaneGeometry(0.7, 3.4, 1, 8);
-  const pos = leaf.attributes.position;
-  for (let i = 0; i < pos.count; i++) {
-    const y = pos.getY(i) + 1.7;
-    pos.setZ(i, -Math.pow(y / 3.4, 2) * 1.6);
-    pos.setX(i, pos.getX(i) * Math.sin((y / 3.4) * Math.PI) * 1.2);
-    pos.setY(i, y);
-  }
-  leaf.computeVertexNormals();
-  for (let k = 0; k < 9; k++) {
-    const f = new THREE.Mesh(leaf, leafMat);
-    f.position.copy(top);
-    f.rotation.set(-0.9 - (k % 2) * 0.3, (k / 9) * Math.PI * 2, 0, "YXZ");
-    g.add(f);
-  }
-  return g;
-}
 
 export function buildCampus(scene, crestSrc) {
   const g = new THREE.Group();
   g.position.copy(CAMPUS);
 
-  // lawn and paths
-  const { tex: grass } = canvasTexture(512, 512, (ctx, w, h) => {
-    ctx.fillStyle = "#3d5a2a";
-    ctx.fillRect(0, 0, w, h);
-    for (let i = 0; i < 9000; i++) {
-      ctx.fillStyle = `rgba(${40 + Math.random() * 60},${70 + Math.random() * 70},${25 + Math.random() * 30},0.5)`;
-      ctx.fillRect(Math.random() * w, Math.random() * h, 2, 3);
-    }
-  });
-  grass.wrapS = grass.wrapT = THREE.RepeatWrapping;
-  grass.repeat.set(30, 30);
+  // lawn, plaza and the approach path
+  const grass = grassTex().clone();
+  grass.needsUpdate = true;
+  grass.repeat.set(40, 40);
   const ground = new THREE.Mesh(new THREE.PlaneGeometry(400, 400), new THREE.MeshStandardMaterial({ map: grass, roughness: 1 }));
   ground.rotation.x = -Math.PI / 2;
+  ground.receiveShadow = true;
   g.add(ground);
-  const path = new THREE.Mesh(new THREE.PlaneGeometry(6, 60), new THREE.MeshStandardMaterial({ color: 0xb8a58c, roughness: 0.9 }));
+  const pav = paverTex("#a39b8e").clone();
+  pav.needsUpdate = true;
+  pav.repeat.set(2, 16);
+  const path = new THREE.Mesh(new THREE.PlaneGeometry(6, 64), new THREE.MeshStandardMaterial({ map: pav, roughness: 0.85 }));
   path.rotation.x = -Math.PI / 2;
-  path.position.set(0, 0.02, -4);
+  path.position.set(0, 0.02, -2);
+  path.receiveShadow = true;
   g.add(path);
-  const plaza = new THREE.Mesh(new THREE.PlaneGeometry(40, 10), path.material);
+  const pav2 = paverTex("#b1a898").clone();
+  pav2.needsUpdate = true;
+  pav2.repeat.set(12, 3);
+  const plaza = new THREE.Mesh(new THREE.PlaneGeometry(56, 12), new THREE.MeshStandardMaterial({ map: pav2, roughness: 0.85 }));
   plaza.rotation.x = -Math.PI / 2;
-  plaza.position.set(0, 0.02, -30);
+  plaza.position.set(0, 0.025, -29);
+  plaza.receiveShadow = true;
   g.add(plaza);
 
-  // faculty building: warm lit window bands at golden hour
-  const { tex: facade } = canvasTexture(1024, 512, (ctx, w, h) => {
-    ctx.fillStyle = "#e9e1d4";
-    ctx.fillRect(0, 0, w, h);
-    for (let f = 0; f < 4; f++) {
-      const y = 40 + f * 118;
-      ctx.fillStyle = "#2a2622";
-      ctx.fillRect(0, y, w, 64);
-      for (let x = 10; x < w; x += 42) {
-        const on = Math.random();
-        ctx.fillStyle = on > 0.35 ? `rgba(255,${190 + Math.random() * 40},${120 + Math.random() * 50},${0.6 + Math.random() * 0.4})` : "#3a3632";
-        ctx.fillRect(x, y + 6, 34, 52);
-      }
-    }
-  });
-  const bodyMat = new THREE.MeshStandardMaterial({ map: facade, roughness: 0.7, emissive: 0xffffff, emissiveMap: facade, emissiveIntensity: 0.18 });
-  const main = new THREE.Mesh(new THREE.BoxGeometry(34, 16, 12), [
-    new THREE.MeshStandardMaterial({ color: 0xd8cfc0, roughness: 0.8 }),
-    new THREE.MeshStandardMaterial({ color: 0xd8cfc0, roughness: 0.8 }),
-    new THREE.MeshStandardMaterial({ color: 0xcfc6b6, roughness: 0.8 }),
-    new THREE.MeshStandardMaterial({ color: 0xcfc6b6, roughness: 0.8 }),
-    bodyMat,
-    bodyMat,
-  ]);
-  main.position.set(0, 8, -42);
+  // the faculty and two neighbouring blocks around the plaza
+  const main = facultyBlock({ w: 40, d: 13, floors: 4 });
+  main.position.set(0, 0, -42);
   g.add(main);
-  const wing = new THREE.Mesh(new THREE.BoxGeometry(12, 11, 22), new THREE.MeshStandardMaterial({ color: 0xd8cfc0, roughness: 0.8 }));
-  wing.position.set(-22, 5.5, -36);
-  g.add(wing);
-  const wing2 = wing.clone();
-  wing2.position.set(22, 5.5, -36);
-  g.add(wing2);
-  // glass entrance with a canopy
-  const lobby = new THREE.Mesh(new THREE.BoxGeometry(10, 4.5, 0.2), new THREE.MeshPhysicalMaterial({ color: 0x223040, metalness: 0.2, roughness: 0.05, clearcoat: 1, emissive: new THREE.Color("#ffc890"), emissiveIntensity: 0.35 }));
-  lobby.position.set(0, 2.25, -35.9);
-  g.add(lobby);
-  const canopy = new THREE.Mesh(new THREE.BoxGeometry(14, 0.4, 5), new THREE.MeshStandardMaterial({ color: 0xf2ede4, roughness: 0.6 }));
-  canopy.position.set(0, 4.8, -34);
-  g.add(canopy);
-  for (const x of [-6.5, 6.5]) {
-    const col = new THREE.Mesh(new THREE.CylinderGeometry(0.25, 0.25, 4.8, 16), canopy.material);
-    col.position.set(x, 2.4, -31.8);
-    g.add(col);
-  }
-  const name = textPlane("UNIVERSITY OF MORATUWA", { size: 110, color: "#fff1dc", weight: 600, height: 1.2, glow: 1.5 });
-  name.position.set(0, 13.2, -35.95);
+  const left = facultyBlock({ w: 28, d: 12, floors: 3 });
+  left.position.set(-36, 0, -24);
+  left.rotation.y = 0.75;
+  g.add(left);
+  const right = facultyBlock({ w: 26, d: 12, floors: 3 });
+  right.position.set(36, 0, -28);
+  right.rotation.y = -0.7;
+  g.add(right);
+
+  const h = main.userData.height;
+  const name = textPlane("UNIVERSITY OF MORATUWA", { size: 110, color: "#3c3328", weight: 600, height: 0.62, glow: 1 });
+  name.position.set(0, h + 0.02, -42 + 6.5 + 0.61);
   g.add(name);
-  const faculty = textPlane("Faculty of Information Technology", { size: 90, color: "#fff4e6", font: SERIF, weight: 400, height: 0.9, glow: 1.4 });
-  faculty.position.set(0, 5.6, -31.45);
+  const faculty = textPlane("Faculty of Information Technology", { size: 90, color: "#fff4e6", font: SERIF, weight: 400, height: 0.75, glow: 1.3 });
+  faculty.position.set(0, 3.35, -42 + 6.5 + 0.61);
   g.add(faculty);
 
-  // the crest on a stone monument in front of the building
+  // the crest on a board-formed concrete monument
   const monument = new THREE.Group();
-  monument.position.set(-7.5, 0, -18);
+  monument.position.set(-8, 0, -16);
   monument.rotation.y = 0.35;
-  const stone = new THREE.Mesh(new THREE.BoxGeometry(4.2, 4.6, 0.8), new THREE.MeshStandardMaterial({ color: 0x5b5249, roughness: 0.9 }));
-  stone.position.y = 2.3;
+  const conc = concreteTex().clone();
+  conc.needsUpdate = true;
+  const stone = new THREE.Mesh(new THREE.BoxGeometry(4.4, 4.8, 0.9), new THREE.MeshStandardMaterial({ color: 0x8f877c, map: conc, roughness: 0.95 }));
+  stone.position.y = 2.4;
+  stone.castShadow = stone.receiveShadow = true;
   monument.add(stone);
+  const plinth = new THREE.Mesh(new THREE.BoxGeometry(5.2, 0.35, 1.8), new THREE.MeshStandardMaterial({ color: 0x5f5a53, roughness: 0.9 }));
+  plinth.position.y = 0.17;
+  plinth.receiveShadow = true;
+  monument.add(plinth);
   loadImage(crestSrc).then((img) => {
     if (!img) return;
     const t = new THREE.Texture(img);
     t.colorSpace = THREE.SRGBColorSpace;
     t.needsUpdate = true;
-    const crest = new THREE.Mesh(new THREE.PlaneGeometry(3.3, (3.3 * img.height) / img.width), new THREE.MeshBasicMaterial({ map: t, transparent: true, toneMapped: false }));
-    crest.material.color.setScalar(1.1);
-    crest.position.set(0, 2.45, 0.41);
+    const crest = new THREE.Mesh(new THREE.PlaneGeometry(3.3, (3.3 * img.height) / img.width), new THREE.MeshStandardMaterial({ map: t, transparent: true, roughness: 0.4, metalness: 0.3, emissive: 0xffffff, emissiveMap: t, emissiveIntensity: 0.25 }));
+    crest.position.set(0, 2.55, 0.46);
     monument.add(crest);
   });
-  const up = glowDisc("#ffd29a", 3, 0.5);
+  const up = glowDisc("#ffd29a", 3, 0.35);
   up.position.set(0, 2.4, 0.5);
   monument.add(up);
   g.add(monument);
 
-  // palms and lamps along the path
-  const trunk = new THREE.MeshStandardMaterial({ color: 0x6b5238, roughness: 1 });
-  const leaves = new THREE.MeshStandardMaterial({ color: 0x2f5a24, roughness: 0.8, side: THREE.DoubleSide });
+  // hedges along the plaza
+  const hedge = new THREE.MeshStandardMaterial({ color: 0x2f5424, roughness: 0.9 });
+  for (const x of [-16, 16]) {
+    const b = new THREE.Mesh(new THREE.BoxGeometry(18, 0.9, 1), hedge);
+    b.position.set(x, 0.45, -23.4);
+    b.castShadow = b.receiveShadow = true;
+    g.add(b);
+  }
+
+  // palms along the path, shade trees on the lawns
   [
-    [-9, 6, 9, 0.8],
-    [9, 4, 10, -0.9],
-    [-12, -10, 11, 1.1],
-    [12, -12, 9.5, -0.7],
-    [-18, -24, 10, 0.6],
-    [18, -22, 11, -1],
-    [-28, -6, 9, 0.9],
-    [28, -8, 10, -0.8],
-  ].forEach(([x, z, h, l]) => {
-    const p = palm(h, l, trunk, leaves);
+    [-5, 10, 10, 0.9],
+    [5, 6, 11, -0.9],
+    [-5, -2, 10.5, 1.1],
+    [5, -8, 9.5, -0.8],
+    [-24, -6, 11, 0.7],
+    [26, -10, 10, -0.9],
+    [-30, 8, 9, 0.8],
+    [31, 4, 10, -0.7],
+  ].forEach(([x, z, hh, l]) => {
+    const p = palm(hh, l);
     p.position.set(x, 0, z);
-    p.rotation.y = Math.random() * Math.PI;
+    p.rotation.y = rand() * Math.PI * 2;
     g.add(p);
   });
+  [
+    [-14, 4],
+    [14, 0],
+    [-18, -12],
+    [19, -16],
+    [-42, 2],
+    [44, -4],
+    [-12, 18],
+    [13, 20],
+  ].forEach(([x, z]) => {
+    const t = tree(1 + rand() * 0.4);
+    t.position.set(x, 0, z);
+    g.add(t);
+  });
+  for (const [x, z, r] of [
+    [-4.2, 2, Math.PI / 2],
+    [4.2, -6, -Math.PI / 2],
+    [-10, -27, 0],
+    [10, -27, 0],
+  ]) {
+    const b = bench();
+    b.position.set(x, 0, z);
+    b.rotation.y = r;
+    g.add(b);
+  }
   for (let i = 0; i < 5; i++) {
-    for (const x of [-4, 4]) {
-      const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.08, 3.4, 8), new THREE.MeshStandardMaterial({ color: 0x2a2a2a }));
-      pole.position.set(x, 1.7, 14 - i * 9);
-      g.add(pole);
-      const bulb = new THREE.Mesh(new THREE.SphereGeometry(0.2, 12, 12), new THREE.MeshBasicMaterial({ color: hdr(C.warm, 4), toneMapped: false }));
-      bulb.position.set(x, 3.5, 14 - i * 9);
-      g.add(bulb);
+    for (const s of [-1, 1]) {
+      const l = streetLamp("#ffd9a8");
+      l.position.set(s * 3.6, 0, 16 - i * 9);
+      l.rotation.y = s > 0 ? 0 : Math.PI;
+      g.add(l);
     }
   }
 
-  const sun = new THREE.DirectionalLight(0xffc48a, 2.2);
-  sun.position.set(CAMPUS.x - 60, 25, CAMPUS.z - 120);
-  sun.target.position.copy(CAMPUS);
+  const sun = new THREE.DirectionalLight(0xffc48a, 3.2);
+  sun.position.set(CAMPUS.x - 70, 32, CAMPUS.z + 10);
+  sun.target.position.set(CAMPUS.x, 0, CAMPUS.z - 25);
+  sun.castShadow = true;
+  sun.shadow.mapSize.set(2048, 2048);
+  Object.assign(sun.shadow.camera, { left: -70, right: 70, top: 70, bottom: -70, near: 1, far: 220 });
+  sun.shadow.bias = -0.0004;
+  sun.shadow.normalBias = 0.04;
   scene.add(sun, sun.target);
-  const fill = new THREE.PointLight(0xffb070, 60, 60);
-  fill.position.set(0, 8, -20);
-  g.add(fill);
+  const bounce = new THREE.PointLight(0xffb070, 40, 70);
+  bounce.position.set(0, 6, -20);
+  g.add(bounce);
   scene.add(g);
+  void C;
+  void hdr;
   return { lights: [sun] };
 }

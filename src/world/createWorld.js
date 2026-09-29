@@ -1,13 +1,13 @@
 import * as THREE from "three";
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
 import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
+import { GTAOPass } from "three/examples/jsm/postprocessing/GTAOPass.js";
 import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass.js";
 import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass.js";
 import { OutputPass } from "three/examples/jsm/postprocessing/OutputPass.js";
 import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
 import { U, V } from "./helpers";
 import { buildSky, SKIES } from "./sky";
-import { buildPortrait } from "./portrait";
 import { buildSpace } from "./space";
 import { buildCampus, CAMPUS } from "./campus";
 import { buildOffices, officeZ, FRONT_X, STREET_X } from "./offices";
@@ -100,6 +100,9 @@ export function createWorld(canvas, data, { onPlace, onFade, onReady } = {}) {
   let dpr = Math.min(window.devicePixelRatio, window.innerWidth < 800 ? 1.25 : 1.75);
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.0;
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  const desktop = window.innerWidth >= 900;
 
   const scene = new THREE.Scene();
   scene.fog = new THREE.Fog(0x000000, 200, 2000);
@@ -112,7 +115,6 @@ export function createWorld(canvas, data, { onPlace, onFade, onReady } = {}) {
   scene.add(hemi);
 
   const sky = buildSky(scene);
-  const portrait = buildPortrait(scene, data.portrait);
   const spaceTick = buildSpace(scene, data.skills);
   const campus = buildCampus(scene, data.crest);
   const offices = buildOffices(scene, data.experiences);
@@ -120,8 +122,28 @@ export function createWorld(canvas, data, { onPlace, onFade, onReady } = {}) {
   buildRooftop(scene);
   const runLights = [[], campus.lights, offices.lights, [], []];
 
+  // glass reflects the sky it stands under: one prefiltered sky per location
+  const envScene = new THREE.Scene();
+  envScene.add(new THREE.Mesh(sky.sky.geometry, sky.sky.material));
+  const envCache = {};
+  const envFor = (ri) => {
+    const name = RUNS[ri].sky;
+    if (name === "space" || name === "gallery") return envTex;
+    if (!envCache[name]) {
+      sky.set(SKIES[name], SKIES[name], 0, scene.fog);
+      envCache[name] = pmrem.fromScene(envScene, 0.02, 0.1, 1000).texture;
+    }
+    return envCache[name];
+  };
+
   const composer = new EffectComposer(renderer);
   composer.addPass(new RenderPass(scene, camera));
+  // ambient occlusion grounds the architecture; outdoors on desktop only
+  const gtao = new GTAOPass(scene, camera, 512, 512);
+  gtao.updateGtaoMaterial({ radius: 0.8, distanceExponent: 1.4, thickness: 1.2, scale: 1.2, samples: 12 });
+  gtao.blendIntensity = 0.9;
+  gtao.enabled = false;
+  composer.addPass(gtao);
   const bloom = new UnrealBloomPass(new THREE.Vector2(256, 256), 0.55, 0.45, 0.82);
   composer.addPass(bloom);
   composer.addPass(new OutputPass());
@@ -179,10 +201,6 @@ export function createWorld(canvas, data, { onPlace, onFade, onReady } = {}) {
     camera.aspect = w / h;
     camera.fov = camera.aspect < 0.8 ? 64 : 50;
     camera.updateProjectionMatrix();
-    // portrait sits right of the copy on wide screens, below it on phones
-    const narrow = camera.aspect < 1;
-    portrait.group.userData.baseY = narrow ? -2.2 : -0.35;
-    portrait.group.position.set(narrow ? 0.3 : 3.2, portrait.group.userData.baseY, narrow ? 6 : 8.4);
     measure();
   };
   resize();
@@ -257,7 +275,8 @@ export function createWorld(canvas, data, { onPlace, onFade, onReady } = {}) {
       sky.set(s, s, 0, scene.fog);
       hemi.intensity = [0.35, 0.6, 0.3, 0.2, 0.5][ri];
       bloom.threshold = ri === 2 || ri === 3 ? 0.95 : 0.82;
-      portrait.group.visible = ri === 0;
+      gtao.enabled = desktop && (ri === 1 || ri === 2);
+      scene.environment = envFor(ri);
     }
 
     pointer.sx += (pointer.x - pointer.sx) * 0.05;
@@ -282,7 +301,6 @@ export function createWorld(canvas, data, { onPlace, onFade, onReady } = {}) {
 
     if (ri === 0) {
       spaceTick(time);
-      portrait.tick(time, dt, pointer);
     }
     if (ri === 2) offices.tick(camera);
 
@@ -302,6 +320,7 @@ export function createWorld(canvas, data, { onPlace, onFade, onReady } = {}) {
       ro.disconnect();
       composer.dispose();
       envTex.dispose();
+      Object.values(envCache).forEach((t) => t.dispose());
       pmrem.dispose();
       renderer.dispose();
     },

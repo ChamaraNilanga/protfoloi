@@ -1,7 +1,6 @@
 import { useEffect, useRef } from "react";
 import { createWorld } from "../world/createWorld";
 import { name, orbitSkills, experiences, projects } from "../content";
-import Portrait from "../images/my2.png";
 import Crest from "../images/uom.png";
 
 const World = ({ onPlace }) => {
@@ -16,7 +15,7 @@ const World = ({ onPlace }) => {
       if (cancelled) return;
       world = createWorld(
         ref.current,
-        { name, skills: orbitSkills, experiences, projects, portrait: Portrait, crest: Crest },
+        { name, skills: orbitSkills, experiences, projects, crest: Crest },
         {
           onPlace,
           onFade: (v, color) => {

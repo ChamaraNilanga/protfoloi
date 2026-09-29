@@ -1489,31 +1489,6 @@ em {
   background: #05060b;
 }
 
-.portrait-tag {
-  position: absolute;
-  right: calc(var(--pad-x) + 4%);
-  bottom: 13%;
-  display: flex;
-  align-items: baseline;
-  gap: 10px;
-  padding: 12px 18px;
-  border-radius: 12px;
-  background: var(--glass-nav);
-  backdrop-filter: blur(17px);
-  -webkit-backdrop-filter: blur(17px);
-  font-size: 14px;
-}
-
-.portrait-tag em {
-  color: rgba(255, 255, 255, 0.65);
-  font-size: 16px;
-}
-
-@media (max-width: 1023px) {
-  .portrait-tag {
-    display: none;
-  }
-}
 
 .chapter.right-side {
   align-items: flex-end;
@@ -1683,5 +1658,278 @@ em {
   }
   .chapter.right-side {
     align-items: center;
+  }
+}
+
+/* ---------- hero: profile as code ---------- */
+:root {
+  --mono: "Geist Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+
+.dev-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 600px;
+  margin: 60px auto 0;
+}
+
+@media (min-width: 1024px) {
+  .dev-wrap {
+    flex: 0 0 min(530px, 42vw);
+    margin: 60px 70px 0 0;
+  }
+  .hero-copy {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+  .hero-row .hero-title {
+    font-size: clamp(52px, 4.7vw, 72px);
+  }
+}
+
+.hero {
+  overflow-x: clip;
+}
+
+.dev-window {
+  position: relative;
+  border-radius: 20px;
+  background: rgba(12, 12, 20, 0.62);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 40px 120px -30px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.dev-bar {
+  height: 44px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  font: 400 12px/1 var(--mono);
+}
+
+.dev-dots {
+  display: flex;
+  gap: 7px;
+  margin-right: 12px;
+}
+
+.dev-dots i {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: #ff5f57;
+}
+
+.dev-dots i:nth-child(2) {
+  background: #febc2e;
+}
+
+.dev-dots i:nth-child(3) {
+  background: #28c840;
+}
+
+.dev-tab {
+  padding: 8px 12px;
+  border-radius: 8px;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.dev-tab.active {
+  background: rgba(255, 255, 255, 0.07);
+  color: #fff;
+}
+
+.dev-body {
+  position: relative;
+  height: 280px;
+  overflow: hidden;
+  border-radius: 0 0 0 0;
+}
+
+.dev-glow {
+  position: absolute;
+  right: -60px;
+  top: 10px;
+  width: 360px;
+  height: 360px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(77, 124, 255, 0.55), rgba(255, 77, 94, 0.18) 55%, transparent 70%);
+  pointer-events: none;
+}
+
+.dev-code {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  padding: 18px 0 0 0;
+  font: 400 12px/1.95 var(--mono);
+  white-space: pre;
+}
+
+.dev-line {
+  display: block;
+  opacity: 0;
+  animation: fade-left 0.6s var(--ease) forwards;
+}
+
+.dev-line .ln {
+  display: inline-block;
+  width: 38px;
+  padding-right: 14px;
+  text-align: right;
+  color: rgba(255, 255, 255, 0.25);
+  user-select: none;
+}
+
+.tk-kw {
+  color: #c792ea;
+}
+
+.tk-id {
+  color: #82aaff;
+}
+
+.tk-key {
+  color: #9cdcfe;
+}
+
+.tk-str {
+  color: #ffcb8b;
+}
+
+.tk-op {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.caret {
+  display: inline-block;
+  width: 7px;
+  height: 15px;
+  vertical-align: -3px;
+  background: #fff;
+  animation: blink 1s steps(1) infinite;
+}
+
+.dev-status {
+  position: relative;
+  z-index: 3;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 0 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 0 0 20px 20px;
+  background: rgba(12, 12, 20, 0.85);
+  font: 400 11px/1 var(--mono);
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* the photo stands inside the editor and breaks out of its frame */
+.dev-photo {
+  position: absolute;
+  z-index: 2;
+  right: -80px;
+  bottom: 32px;
+  height: 385px;
+  width: auto;
+  max-width: none;
+  pointer-events: none;
+  filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.55)) drop-shadow(-6px 0 24px rgba(77, 124, 255, 0.25));
+}
+
+.dev-chip {
+  position: absolute;
+  z-index: 4;
+  padding: 10px 14px;
+  border-radius: 11px;
+  background: rgba(10, 7, 7, 0.55);
+  backdrop-filter: blur(17px);
+  -webkit-backdrop-filter: blur(17px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  font: 400 12px/1 var(--mono);
+  color: rgba(255, 255, 255, 0.85);
+  white-space: nowrap;
+  animation: float 6s ease-in-out infinite;
+}
+
+.dev-chip b {
+  color: #82aaff;
+  font-weight: 500;
+}
+
+.dev-chip .ok {
+  color: #5fe3a1;
+}
+
+.chip-a {
+  top: -22px;
+  left: 24px;
+}
+
+.chip-b {
+  top: 46%;
+  right: -70px;
+  color: #c792ea;
+  animation-delay: -2s;
+}
+
+.chip-c {
+  bottom: -20px;
+  left: 60px;
+  animation-delay: -4s;
+}
+
+@keyframes float {
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dev-chip,
+  .dev-line,
+  .caret {
+    animation: none;
+    opacity: 1;
+  }
+}
+
+@media (max-width: 1279px) {
+  .chip-b {
+    right: -10px;
+    top: auto;
+    bottom: 60px;
+  }
+}
+
+@media (max-width: 640px) {
+  .dev-body {
+    height: 230px;
+  }
+  .dev-code {
+    font-size: 10.5px;
+  }
+  .dev-line .ln {
+    width: 28px;
+    padding-right: 10px;
+  }
+  .dev-wrap {
+    margin-top: 200px;
+  }
+  /* on phones the photo stands above the editor instead of inside it */
+  .dev-photo {
+    height: 200px;
+    top: -196px;
+    bottom: auto;
+    right: 6px;
+  }
+  .dev-tab:not(.active),
+  .chip-b {
+    display: none;
   }
 }

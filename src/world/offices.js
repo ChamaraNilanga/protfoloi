@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { V, C, hdr, canvasTexture, textPlane, glowDisc, loadImage, FONT } from "./helpers";
+import { curtainTower, metalMat, concreteTex, asphaltTex, paverTex, streetLamp, planter, bench, bollard, rand } from "./architecture";
 
 // An evening street with one office per role. Each office has a glass front,
 // sliding doors, a logo wall at the back and a glass partition on the right.
@@ -9,23 +10,6 @@ export const officeZ = (i) => -20 - i * 34;
 
 const ROOM = { depth: 14, half: 7, h: 4.6 };
 const ACCENTS = [C.cyan, C.violet, C.coral];
-
-function windowTexture(seed, warm) {
-  let s = seed;
-  const rand = () => (s = (s * 16807) % 2147483647) / 2147483647;
-  const { tex } = canvasTexture(256, 512, (ctx, w, h) => {
-    ctx.fillStyle = "#10131c";
-    ctx.fillRect(0, 0, w, h);
-    for (let y = 8; y < h - 8; y += 26) {
-      for (let x = 8; x < w - 8; x += 22) {
-        const on = rand();
-        ctx.fillStyle = on > 0.45 ? (warm ? `rgba(255,${200 + rand() * 40},${140 + rand() * 60},${0.5 + rand() * 0.5})` : `rgba(${170 + rand() * 60},${200 + rand() * 40},255,${0.4 + rand() * 0.5})`) : "#1a1e2a";
-        ctx.fillRect(x, y, 16, 18);
-      }
-    }
-  });
-  return tex;
-}
 
 function codeTexture(accent) {
   return canvasTexture(512, 320, (ctx, w, h) => {
@@ -51,29 +35,37 @@ function office(scene, exp, i) {
   const accent = ACCENTS[i % ACCENTS.length];
   const g = new THREE.Group();
   g.position.set(FRONT_X, 0, z0); // local +x is the street, -x goes into the room
-  const floors = 3 + i;
-  const height = ROOM.h + floors * 3.4;
+  // the tower above the ground-floor office: curtain wall, lit floors, roof plant
+  const tower = curtainTower({ w: ROOM.depth + 2, d: ROOM.half * 2 + 2, h: 16 + i * 7, tint: ["#7d93b3", "#8a8fb8", "#94a3b8"][i], warm: i !== 1, crown: accent });
+  tower.position.set(-ROOM.depth / 2 - 1, ROOM.h + 0.25, 0);
+  g.add(tower);
 
-  // upper floors
-  const wt = windowTexture(11 + i * 7, i !== 1);
-  wt.wrapS = wt.wrapT = THREE.RepeatWrapping;
-  wt.repeat.set(2, floors / 3);
-  const shell = new THREE.MeshStandardMaterial({ color: 0x1a1d26, roughness: 0.6, metalness: 0.4, emissive: 0xffffff, emissiveMap: wt, emissiveIntensity: 0.9, map: wt });
-  // starts just above the ceiling so its underside never shows through
-  const upperH = height - ROOM.h - 0.25;
-  const upper = new THREE.Mesh(new THREE.BoxGeometry(ROOM.depth + 2, upperH, ROOM.half * 2 + 2), shell);
-  upper.position.set(-ROOM.depth / 2 - 1, ROOM.h + 0.25 + upperH / 2, 0);
-  g.add(upper);
-  const crown = new THREE.Mesh(new THREE.BoxGeometry(ROOM.depth + 2.2, 0.12, ROOM.half * 2 + 2.2), new THREE.MeshBasicMaterial({ color: hdr(accent, 2.5), toneMapped: false }));
-  crown.position.set(-ROOM.depth / 2 - 1, height, 0);
-  g.add(crown);
+  // glass entrance canopy with a lit soffit
+  const canopy = new THREE.Mesh(new THREE.BoxGeometry(2.4, 0.18, 7), metalMat(0x1d2027));
+  canopy.position.set(1.2, 3.6, 0);
+  canopy.castShadow = true;
+  g.add(canopy);
+  const soffit = new THREE.Mesh(new THREE.PlaneGeometry(2.2, 6.8), new THREE.MeshBasicMaterial({ color: hdr("#fff1dc", 1.2), toneMapped: false }));
+  soffit.rotation.x = Math.PI / 2;
+  soffit.position.set(1.2, 3.5, 0);
+  g.add(soffit);
+  for (const z of [-3.3, 3.3]) {
+    const rod = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.02, 1.2, 6), metalMat(0x1d2027));
+    rod.position.set(2.2, 4.2, z);
+    rod.rotation.z = 0.9;
+    g.add(rod);
+  }
 
   // ground-floor walls
-  const wallMat = new THREE.MeshStandardMaterial({ color: 0x2a2d36, roughness: 0.8 });
+  const cladTex = concreteTex().clone();
+  cladTex.needsUpdate = true;
+  cladTex.repeat.set(3, 1);
+  const wallMat = new THREE.MeshStandardMaterial({ color: 0x5d5a57, map: cladTex, roughness: 0.75 });
   const interior = new THREE.MeshStandardMaterial({ color: 0xb9b4ac, roughness: 0.9 });
   for (const s of [-1, 1]) {
     const side = new THREE.Mesh(new THREE.BoxGeometry(ROOM.depth + 2, ROOM.h, 0.3), wallMat);
     side.position.set(-ROOM.depth / 2 - 1, ROOM.h / 2, s * (ROOM.half + 0.85));
+    side.castShadow = side.receiveShadow = true;
     g.add(side);
     const inner = new THREE.Mesh(new THREE.PlaneGeometry(ROOM.depth, ROOM.h), interior);
     inner.position.set(-ROOM.depth / 2, ROOM.h / 2, s * ROOM.half);
@@ -146,7 +138,8 @@ function office(scene, exp, i) {
   // company sign on the facade
   const sign = textPlane(exp.company, { size: 120, weight: 500, height: 0.95, glow: 2 });
   sign.rotation.y = Math.PI / 2;
-  sign.position.set(0.25, ROOM.h + 1.2, 0);
+  sign.scale.setScalar(0.62);
+  sign.position.set(2.42, 3.62, 0);
   g.add(sign);
 
   // logo wall
@@ -230,50 +223,91 @@ function office(scene, exp, i) {
 
 function street(scene) {
   const g = new THREE.Group();
-  const len = 160;
-  const road = new THREE.Mesh(new THREE.PlaneGeometry(14, len), new THREE.MeshStandardMaterial({ color: 0x15161b, roughness: 0.45, metalness: 0.2 }));
+  const len = 180;
+  const asphalt = asphaltTex().clone();
+  asphalt.needsUpdate = true;
+  asphalt.repeat.set(3, 36);
+  const road = new THREE.Mesh(new THREE.PlaneGeometry(14, len), new THREE.MeshStandardMaterial({ map: asphalt, roughness: 0.55, metalness: 0.15, envMapIntensity: 0.6 }));
   road.rotation.x = -Math.PI / 2;
-  road.position.set(STREET_X + 5, 0, -55);
+  road.position.set(STREET_X + 5, 0, -60);
+  road.receiveShadow = true;
   g.add(road);
-  const walk = new THREE.Mesh(new THREE.BoxGeometry(4, 0.12, len), new THREE.MeshStandardMaterial({ color: 0x3a3c44, roughness: 0.8 }));
-  walk.position.set(FRONT_X + 2, 0.06, -55);
-  g.add(walk);
-  const walk2 = walk.clone();
-  walk2.position.set(STREET_X + 14, 0.06, -55);
-  g.add(walk2);
-  for (let k = 0; k < 20; k++) {
-    const dash = new THREE.Mesh(new THREE.PlaneGeometry(0.15, 2.4), new THREE.MeshBasicMaterial({ color: 0xcfcfcf }));
+  const pav = paverTex("#7c7a76").clone();
+  pav.needsUpdate = true;
+  pav.repeat.set(1, 40);
+  const walkMat = new THREE.MeshStandardMaterial({ map: pav, roughness: 0.8 });
+  for (const x of [FRONT_X + 2, STREET_X + 14]) {
+    const walk = new THREE.Mesh(new THREE.BoxGeometry(4, 0.15, len), walkMat);
+    walk.position.set(x, 0.075, -60);
+    walk.receiveShadow = true;
+    g.add(walk);
+  }
+  const curbMat = new THREE.MeshStandardMaterial({ color: 0x9a9894, roughness: 0.8 });
+  for (const x of [FRONT_X + 4.05, STREET_X + 11.95]) {
+    const curb = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.2, len), curbMat);
+    curb.position.set(x, 0.1, -60);
+    curb.receiveShadow = true;
+    g.add(curb);
+  }
+  const paint = new THREE.MeshStandardMaterial({ color: 0xd9d6cf, roughness: 0.7 });
+  for (let k = 0; k < 22; k++) {
+    const dash = new THREE.Mesh(new THREE.PlaneGeometry(0.15, 2.4), paint);
     dash.rotation.x = -Math.PI / 2;
-    dash.position.set(STREET_X + 5, 0.01, 20 - k * 8);
+    dash.position.set(STREET_X + 5, 0.01, 24 - k * 8);
     g.add(dash);
   }
-  // street lamps with warm pools
-  for (let k = 0; k < 9; k++) {
-    const z = 12 - k * 17;
-    const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.1, 5.5, 8), new THREE.MeshStandardMaterial({ color: 0x2a2c33, metalness: 0.6 }));
-    pole.position.set(FRONT_X + 3.6, 2.75, z);
-    g.add(pole);
-    const head = new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.12, 0.3), new THREE.MeshBasicMaterial({ color: hdr("#ffe2b8", 3.5), toneMapped: false }));
-    head.position.set(FRONT_X + 3.2, 5.5, z);
-    g.add(head);
-    const pool = glowDisc("#ffcf94", 3.4, 0.35);
-    pool.rotation.x = -Math.PI / 2;
-    pool.position.set(FRONT_X + 3, 0.14, z);
-    g.add(pool);
+  // zebra crossings between the offices
+  for (const z of [-3, -37, -71]) {
+    for (let k = 0; k < 8; k++) {
+      const stripe = new THREE.Mesh(new THREE.PlaneGeometry(0.7, 3), paint);
+      stripe.rotation.x = -Math.PI / 2;
+      stripe.position.set(STREET_X - 1.2 + k * 1.4 + 0.7, 0.012, z);
+      g.add(stripe);
+    }
   }
-  // the other side of the street and the skyline
-  let seed = 3;
-  const rand = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
-  const wt = windowTexture(5, false);
-  wt.wrapS = wt.wrapT = THREE.RepeatWrapping;
-  const skyline = new THREE.MeshStandardMaterial({ color: 0x151823, map: wt, emissive: 0xffffff, emissiveMap: wt, emissiveIntensity: 0.7, roughness: 0.6 });
-  for (let k = 0; k < 26; k++) {
-    const h = 10 + rand() * 30;
-    const w = 8 + rand() * 8;
-    const b = new THREE.Mesh(new THREE.BoxGeometry(w, h, w), skyline);
-    const across = k % 2 === 0;
-    b.position.set(across ? STREET_X + 22 + rand() * 10 : FRONT_X - 30 - rand() * 30, h / 2, 20 - (k >> 1) * 13 - rand() * 4);
+  // lamps, trees, benches and bollards on the office side
+  for (let k = 0; k < 10; k++) {
+    const z = 16 - k * 17;
+    const lamp = streetLamp();
+    lamp.position.set(FRONT_X + 3.6, 0.15, z);
+    g.add(lamp);
+    const pool = glowDisc("#ffcf94", 3.6, 0.3);
+    pool.rotation.x = -Math.PI / 2;
+    pool.position.set(FRONT_X + 2.9, 0.16, z);
+    g.add(pool);
+    const lamp2 = streetLamp();
+    lamp2.position.set(STREET_X + 12.4, 0.15, z - 8);
+    lamp2.rotation.y = Math.PI;
+    g.add(lamp2);
+  }
+  for (let k = 0; k < 4; k++) {
+    const z = -3 - k * 34;
+    const p = planter();
+    p.position.set(FRONT_X + 2.4, 0.15, z + 8);
+    g.add(p);
+    const b = bench();
+    b.position.set(FRONT_X + 2.6, 0.15, z + 11.5);
+    b.rotation.y = -Math.PI / 2;
     g.add(b);
+  }
+  for (let i = 0; i < 3; i++) {
+    for (const dz of [-2.6, -1.3, 1.3, 2.6]) {
+      const b = bollard();
+      b.position.set(FRONT_X + 3.7, 0.15, officeZ(i) + dz);
+      g.add(b);
+    }
+  }
+  // the skyline: towers across the street and behind the offices
+  const tints = ["#7d93b3", "#8a96a8", "#6f86a8", "#9aa7b8", "#7b8fb0"];
+  for (let k = 0; k < 18; k++) {
+    const across = k % 2 === 0;
+    const w = 10 + rand() * 8;
+    const d = 10 + rand() * 8;
+    const h = 22 + rand() * 50;
+    const t = curtainTower({ w, d, h, tint: tints[k % tints.length], warm: rand() > 0.4 });
+    const z = 18 - (k >> 1) * 17 - rand() * 4;
+    t.position.set(across ? STREET_X + 22 + w / 2 + rand() * 6 : FRONT_X - 26 - w / 2 - rand() * 14, 0, z);
+    g.add(t);
   }
   scene.add(g);
 }
@@ -282,9 +316,14 @@ export function buildOffices(scene, experiences) {
   street(scene);
   // chronological: first job first along the street
   const list = [...experiences].reverse().map((e, i) => office(scene, e, i));
-  const moon = new THREE.DirectionalLight(0x9aaaff, 0.6);
+  const moon = new THREE.DirectionalLight(0xa8b4ff, 1.3);
   moon.position.set(STREET_X + 40, 50, -20);
   moon.target.position.set(STREET_X, 0, -60);
+  moon.castShadow = true;
+  moon.shadow.mapSize.set(2048, 2048);
+  Object.assign(moon.shadow.camera, { left: -90, right: 90, top: 90, bottom: -90, near: 1, far: 260 });
+  moon.shadow.bias = -0.0004;
+  moon.shadow.normalBias = 0.04;
   scene.add(moon, moon.target);
   return {
     lights: [moon],
