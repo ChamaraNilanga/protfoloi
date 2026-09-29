@@ -10,7 +10,7 @@ import { U, V } from "./helpers";
 import { buildSky, SKIES } from "./sky";
 import { buildSpace } from "./space";
 import { ABOUT_VIEW } from "./earth";
-import { buildCampus, CAMPUS } from "./campus";
+import { buildCampus, CAMPUS, PHOTO_DIST } from "./campus";
 import { buildOffices, officeZ, FRONT_X, STREET_X } from "./offices";
 import { buildGallery, buildRooftop, frameZ, GALLERY, ROOFTOP } from "./finale";
 
@@ -34,8 +34,8 @@ run("space", null, [
 ]);
 const cx = CAMPUS.x;
 run("overcast", "#e9eef2", [
-  [V(cx + 4, 30, 40), V(cx, 3, -30), "Katubedda, Moratuwa"],
-  [V(cx - 2.5, 1.75, 13), V(cx - 1, 5.2, -30), "University of Moratuwa"],
+  [V(cx, 0.1, 2.4), V(cx, 0, -PHOTO_DIST), "Katubedda, Moratuwa"],
+  [V(cx, 0, 0), V(cx, 0, -PHOTO_DIST), "University of Moratuwa"],
 ]);
 const officeFrames = [[V(STREET_X + 3.5, 1.7, 14), V(STREET_X, 1.6, -20), "The street"]];
 const OFFICE_PLACES = ["Intervest Software", "Hasthiya IT", "Onsys International"];
@@ -117,7 +117,7 @@ export function createWorld(canvas, data, { onPlace, onFade, onReady } = {}) {
 
   const sky = buildSky(scene);
   const spaceTick = buildSpace(scene, data.skills);
-  const campus = buildCampus(scene, data.crest);
+  const campus = buildCampus(scene);
   const offices = buildOffices(scene, data.experiences);
   buildGallery(scene, data.projects);
   buildRooftop(scene);
@@ -202,6 +202,7 @@ export function createWorld(canvas, data, { onPlace, onFade, onReady } = {}) {
     camera.aspect = w / h;
     camera.fov = camera.aspect < 0.8 ? 64 : 50;
     camera.updateProjectionMatrix();
+    campus.fit(camera);
     measure();
   };
   resize();
@@ -275,8 +276,8 @@ export function createWorld(canvas, data, { onPlace, onFade, onReady } = {}) {
       const s = SKIES[RUNS[ri].sky];
       sky.set(s, s, 0, scene.fog);
       hemi.intensity = [0.35, 0.15, 0.3, 0.2, 0.5][ri];
-      bloom.threshold = ri === 2 || ri === 3 ? 0.95 : 0.82;
-      gtao.enabled = desktop && (ri === 1 || ri === 2);
+      bloom.threshold = ri === 1 ? 1.5 : ri === 2 || ri === 3 ? 0.95 : 0.82;
+      gtao.enabled = desktop && ri === 2;
       scene.environment = envFor(ri);
     }
 
@@ -306,6 +307,7 @@ export function createWorld(canvas, data, { onPlace, onFade, onReady } = {}) {
       sky.sky.material.uniforms.uMilky.value = 1 - 0.85 * THREE.MathUtils.smoothstep(kc, 0.35, 0.95);
       sky.sky.material.uniforms.uStars.value = 1 - 0.4 * THREE.MathUtils.smoothstep(kc, 0.35, 0.95);
     }
+    if (ri === 1) campus.tick(time);
     if (ri === 2) offices.tick(camera);
 
     composer.render();
