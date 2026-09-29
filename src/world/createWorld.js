@@ -33,9 +33,9 @@ run("space", null, [
   [V(17, 1, -137), V(0, -8, -150), "Entering the atmosphere"],
 ]);
 const cx = CAMPUS.x;
-run("dusk", "#dcebff", [
-  [V(cx + 14, 34, 50), V(cx, 2, -30), "Katubedda, Moratuwa"],
-  [V(cx + 6.5, 2.4, 3), V(cx - 3, 5.5, -36), "University of Moratuwa"],
+run("overcast", "#e9eef2", [
+  [V(cx + 4, 30, 40), V(cx, 3, -30), "Katubedda, Moratuwa"],
+  [V(cx - 2.5, 1.75, 13), V(cx - 1, 5.2, -30), "University of Moratuwa"],
 ]);
 const officeFrames = [[V(STREET_X + 3.5, 1.7, 14), V(STREET_X, 1.6, -20), "The street"]];
 const OFFICE_PLACES = ["Intervest Software", "Hasthiya IT", "Onsys International"];
@@ -274,7 +274,7 @@ export function createWorld(canvas, data, { onPlace, onFade, onReady } = {}) {
       runLights.forEach((ls, j) => ls.forEach((l) => (l.visible = j === ri)));
       const s = SKIES[RUNS[ri].sky];
       sky.set(s, s, 0, scene.fog);
-      hemi.intensity = [0.35, 0.6, 0.3, 0.2, 0.5][ri];
+      hemi.intensity = [0.35, 0.15, 0.3, 0.2, 0.5][ri];
       bloom.threshold = ri === 2 || ri === 3 ? 0.95 : 0.82;
       gtao.enabled = desktop && (ri === 1 || ri === 2);
       scene.environment = envFor(ri);

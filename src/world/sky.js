@@ -5,6 +5,7 @@ import { U, NOISE } from "./helpers";
 export const SKIES = {
   space: { top: "#02030b", hor: "#0b0d26", bot: "#020309", sun: "#000000", neb: "#5a3cff", neb2: "#ff3d6e", sunDir: [0, 0.2, -1], stars: 1, milky: 1, clouds: 0, fogNear: 200, fogFar: 2000 },
   dusk: { top: "#233f86", hor: "#ffb07a", bot: "#3b2a2e", sun: "#ffd29a", neb: "#ff9a6a", neb2: "#ff7aa0", sunDir: [-0.35, 0.07, -1], stars: 0, milky: 0, clouds: 1, fogNear: 40, fogFar: 220 },
+  overcast: { top: "#aeb8c1", hor: "#eceeea", bot: "#8a8c80", sun: "#fff6e6", neb: "#ffffff", neb2: "#ffffff", sunDir: [-0.2, 0.75, -0.4], stars: 0, milky: 0, clouds: 0.9, fogNear: 70, fogFar: 300 },
   evening: { top: "#0b1438", hor: "#7c6bc4", bot: "#1b1626", sun: "#ff9ab0", neb: "#9a7bff", neb2: "#ff7a9a", sunDir: [0.4, 0.04, -1], stars: 0.35, milky: 0, clouds: 0.6, fogNear: 30, fogFar: 160 },
   gallery: { top: "#050509", hor: "#0b0b12", bot: "#050509", sun: "#000000", neb: "#000000", neb2: "#000000", sunDir: [0, 0.2, -1], stars: 0, milky: 0, clouds: 0, fogNear: 30, fogFar: 90 },
   night: { top: "#02030c", hor: "#1a1a3c", bot: "#1a1020", sun: "#000000", neb: "#4d6bff", neb2: "#ff4d8a", sunDir: [0, 0.2, -1], stars: 1, milky: 1, clouds: 0, fogNear: 120, fogFar: 700 },

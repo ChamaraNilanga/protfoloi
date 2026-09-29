@@ -155,7 +155,7 @@ const unit = new THREE.BoxGeometry(1, 1, 1);
 const m4 = new THREE.Matrix4();
 const q = new THREE.Quaternion();
 
-function instances(material, list) {
+export function instances(material, list) {
   const im = new THREE.InstancedMesh(unit, material, list.length);
   list.forEach(([x, y, z, sx, sy, sz], i) => {
     m4.compose(new THREE.Vector3(x, y, z), q, new THREE.Vector3(sx, sy, sz));
