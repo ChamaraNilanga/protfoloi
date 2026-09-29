@@ -9,6 +9,7 @@ import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment
 import { U, V } from "./helpers";
 import { buildSky, SKIES } from "./sky";
 import { buildSpace } from "./space";
+import { ABOUT_VIEW } from "./earth";
 import { buildCampus, CAMPUS } from "./campus";
 import { buildOffices, officeZ, FRONT_X, STREET_X } from "./offices";
 import { buildGallery, buildRooftop, frameZ, GALLERY, ROOFTOP } from "./finale";
@@ -27,7 +28,7 @@ const run = (sky, fade, frames) => {
 
 run("space", null, [
   [V(0, 1, 16), V(0, 0.6, 0), "Deep space"],
-  [V(0, 6, -88), V(0, -6, -150), "Approaching Earth"],
+  [ABOUT_VIEW.pos, ABOUT_VIEW.look, "Above Earth"],
   [V(34, 8, -122), V(0, -8, -150), "Low Earth orbit"],
   [V(17, 1, -137), V(0, -8, -150), "Entering the atmosphere"],
 ]);
@@ -300,7 +301,10 @@ export function createWorld(canvas, data, { onPlace, onFade, onReady } = {}) {
     }
 
     if (ri === 0) {
-      spaceTick(time);
+      spaceTick(time, kc);
+      // near Earth space turns black like a real orbital photo
+      sky.sky.material.uniforms.uMilky.value = 1 - 0.85 * THREE.MathUtils.smoothstep(kc, 0.35, 0.95);
+      sky.sky.material.uniforms.uStars.value = 1 - 0.4 * THREE.MathUtils.smoothstep(kc, 0.35, 0.95);
     }
     if (ri === 2) offices.tick(camera);
 

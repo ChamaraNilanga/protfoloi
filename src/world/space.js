@@ -1,7 +1,8 @@
 import * as THREE from "three";
-import { U, NOISE, V, C, hdr, glowPoints, fresnelMaterial, label } from "./helpers";
+import { C, hdr, glowPoints, fresnelMaterial, label } from "./helpers";
+import { buildEarth, EARTH } from "./earth";
 
-export const EARTH = { center: V(0, -8, -150), r: 22 };
+export { EARTH };
 
 function buildGalaxy(scene) {
   const N = 42000;
@@ -28,75 +29,8 @@ function buildGalaxy(scene) {
   g.rotation.set(0.55, 0.3, 0.25);
   scene.add(g);
   const core = new THREE.Mesh(new THREE.SphereGeometry(10, 32, 24), fresnelMaterial("#ffcf9e", { power: 1.2, strength: 0.5, inner: 0.9 }));
-  core.position.copy(g.position);
-  scene.add(core);
+  g.add(core);
   return g;
-}
-
-function buildEarth(scene) {
-  const g = new THREE.Group();
-  g.position.copy(EARTH.center);
-  const sunDir = V(-0.8, 0.35, 0.5).normalize();
-  const mat = new THREE.ShaderMaterial({
-    uniforms: { uTime: U.uTime, uSun: { value: sunDir } },
-    vertexShader: /* glsl */ `
-      varying vec3 vP; varying vec3 vN; varying vec3 vV;
-      void main() {
-        vP = position; vN = normalize(mat3(modelMatrix) * normal);
-        vec4 wp = modelMatrix * vec4(position, 1.0);
-        vV = normalize(cameraPosition - wp.xyz);
-        gl_Position = projectionMatrix * viewMatrix * wp;
-      }`,
-    fragmentShader: /* glsl */ `
-      uniform vec3 uSun; uniform float uTime;
-      varying vec3 vP; varying vec3 vN; varying vec3 vV;
-      ${NOISE}
-      void main() {
-        vec3 n = normalize(vP);
-        float h = fbm(n * 2.1 + fbm(n * 4.0) * 0.35);
-        float land = smoothstep(0.515, 0.535, h);
-        vec3 ocean = mix(vec3(0.01, 0.05, 0.16), vec3(0.03, 0.14, 0.32), smoothstep(0.35, 0.52, h));
-        vec3 ground = mix(vec3(0.10, 0.20, 0.07), vec3(0.34, 0.28, 0.16), smoothstep(0.55, 0.7, h));
-        vec3 col = mix(ocean, ground, land);
-        col = mix(col, vec3(0.9), smoothstep(0.78, 0.9, abs(n.y)));
-        float day = dot(normalize(vN), uSun);
-        float lit = smoothstep(-0.15, 0.35, day);
-        col *= 0.05 + lit * 1.2;
-        // city lights on the night side
-        float cities = step(0.72, noise(n * 90.0)) * land * smoothstep(0.1, -0.2, day);
-        col += vec3(1.0, 0.72, 0.4) * cities * 1.6;
-        // specular glint on the ocean
-        vec3 hv = normalize(uSun + normalize(vV));
-        col += vec3(1.0, 0.9, 0.8) * pow(max(dot(normalize(vN), hv), 0.0), 60.0) * (1.0 - land) * 0.6 * lit;
-        gl_FragColor = vec4(col, 1.0);
-      }`,
-  });
-  const earth = new THREE.Mesh(new THREE.SphereGeometry(EARTH.r, 128, 96), mat);
-  g.add(earth);
-
-  const clouds = new THREE.Mesh(
-    new THREE.SphereGeometry(EARTH.r * 1.012, 128, 96),
-    new THREE.ShaderMaterial({
-      uniforms: { uTime: U.uTime, uSun: { value: sunDir } },
-      vertexShader: /* glsl */ `varying vec3 vP; varying vec3 vN; void main() { vP = position; vN = normalize(mat3(modelMatrix) * normal); gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`,
-      fragmentShader: /* glsl */ `
-        uniform vec3 uSun; uniform float uTime; varying vec3 vP; varying vec3 vN;
-        ${NOISE}
-        void main() {
-          vec3 n = normalize(vP);
-          float c = smoothstep(0.5, 0.8, fbm(n * 3.2 + vec3(uTime * 0.01, 0.0, 0.0)));
-          float lit = smoothstep(-0.2, 0.4, dot(normalize(vN), uSun));
-          gl_FragColor = vec4(vec3(1.0) * (0.08 + lit), c * 0.85);
-        }`,
-      transparent: true,
-      depthWrite: false,
-    })
-  );
-  g.add(clouds);
-  g.add(new THREE.Mesh(new THREE.SphereGeometry(EARTH.r * 1.08, 96, 64), fresnelMaterial("#5aa8ff", { power: 3.2, strength: 2.2, side: THREE.BackSide })));
-  g.add(new THREE.Mesh(new THREE.SphereGeometry(EARTH.r * 1.015, 96, 64), fresnelMaterial("#6fb8ff", { power: 4, strength: 0.9 })));
-  scene.add(g);
-  return { g, earth, clouds };
 }
 
 function buildSatellites(scene, skills) {
@@ -142,7 +76,7 @@ function buildSatellites(scene, skills) {
     g.add(pivot);
   });
   scene.add(g);
-  return (t) => spins.forEach((s) => (s.spin.rotation.y = t * s.speed));
+  return { group: g, tick: (t) => spins.forEach((s) => (s.spin.rotation.y = t * s.speed)) };
 }
 
 function buildStars(scene) {
@@ -162,12 +96,15 @@ function buildStars(scene) {
 export function buildSpace(scene, skills) {
   const galaxy = buildGalaxy(scene);
   const earth = buildEarth(scene);
-  const satTick = buildSatellites(scene, skills);
+  const sats = buildSatellites(scene, skills);
   buildStars(scene);
-  return (t) => {
+  return (t, k) => {
     galaxy.rotation.y = 0.3 + t * 0.01;
-    earth.earth.rotation.y = t * 0.02;
-    earth.clouds.rotation.y = t * 0.026;
-    satTick(t);
+    // the galaxy belongs to the hero; near Earth it would sit on the horizon
+    galaxy.visible = k < 0.55;
+    earth.tick(t);
+    // satellites belong to the Stack view; keep the About view clean
+    sats.group.visible = k > 1.35;
+    sats.tick(t);
   };
 }
